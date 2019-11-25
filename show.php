@@ -117,18 +117,23 @@
         */
         if (
             isset($_POST['addcomment'])                      && 
-            !empty($_POST['editcomment'])                       && 
-            strlen(trim($_POST['editcomment']))!=0              && 
-            strlen($_POST['editcomment'])>=1                   
+            !empty($_POST['editcomment'])                    && 
+            strlen(trim($_POST['editcomment']))!=0           && 
+            strlen($_POST['editcomment'])>=1                 &&
+            !empty($_POST['captcha'])                        &&
+            strlen(trim($_POST['captcha']))==6                 
         )
         {
-            insertCommentWithUserLoggedIn();
+            session_start();
+            if(trim($_POST['captcha']) == $_SESSION['captcha'])
+                insertCommentWithUserLoggedIn();
+            else $errorFlag = true;
+            
         }else{
             // if(isset($_POST['addcomment']) && (empty($_POST['username']) || strlen(trim($_POST['username'])) == 0))   $errorFlag = true;
             if(isset($_POST['addcomment']) && (empty($_POST['editcomment']) || strlen(trim($_POST['editcomment'])) == 0))  $errorFlag = true;
+            if(isset($_POST['addcomment']) && (empty($_POST['captcha']) || strlen(trim($_POST['captcha'])) != 6))  $errorFlag = true;
         }
-
-
     }else{
         header("Location: login.php");
         exit();
@@ -216,7 +221,7 @@
                 <?php  if($errorFlag) :?>
 
                     <?php if(empty($_POST['editcomment']) ||  strlen(trim($_POST['editcomment']))==0):?>
-                        <p>WARNING: Please type at least one character in comment</p>
+                        <p class='warning'>WARNING: Please type at least one character in comment</p>
                     <?php endif ?>
 
                 <?php endif ?>
@@ -249,6 +254,20 @@
             </div>
             <div>
                 <ol>
+                    <li>
+                        <div>
+                            <?php  if($errorFlag) :?>
+                                
+                                <?php if(empty($_POST['captcha']) ||  strlen(trim($_POST['captcha']))!=6 || (trim($_POST['captcha']) == $_SESSION['captcha']) ):?>
+                                    <p class='warning'>WARNING: Please check the captcha</p>
+                                <?php endif ?>
+
+                            <?php endif ?>
+                        </div>
+                        <input type="text" name="captcha" id="captcha" placeholder="Captcha">
+                        <img src="captcha/captcha.php" alt="Image created by a PHP script">
+                    </li>
+                    <div class="clear"></div>
                     <li>
                         <input type="submit" name="addcomment" id="addcomment" value="Add Comment">
                     </li>
