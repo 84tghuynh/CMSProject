@@ -28,6 +28,34 @@
     session_start();
     if(isset($_SESSION['email']))
     {
+
+      if(
+          isset($_GET['id'])                                                &&
+          isset($_GET['hidecommentid'])                                     &&
+          filter_input(INPUT_GET, 'id', FILTER_VALIDATE_INT)                &&
+          filter_input(INPUT_GET, 'hidecommentid', FILTER_VALIDATE_INT)
+        )
+        {
+          $id = filter_input(INPUT_GET, 'id', FILTER_SANITIZE_NUMBER_INT);
+          $hidecommentid = filter_input(INPUT_GET, 'hidecommentid', FILTER_SANITIZE_NUMBER_INT);
+
+          header("Location: show.php?id={$id}");
+        }
+
+      if(
+          isset($_GET['id'])                                                &&
+          isset($_GET['deletecommentid'])                                     &&
+          filter_input(INPUT_GET, 'id', FILTER_VALIDATE_INT)                &&
+          filter_input(INPUT_GET, 'deletecommentid', FILTER_VALIDATE_INT)
+        )
+        {
+          $id = filter_input(INPUT_GET, 'id', FILTER_SANITIZE_NUMBER_INT);
+          $deletecommentid = filter_input(INPUT_GET, 'deletecommentid', FILTER_SANITIZE_NUMBER_INT);
+
+          header("Location: show.php?id={$id}");
+        }
+
+
         // $created ='';
         if(isset($_GET['id']) && filter_input(INPUT_GET, 'id', FILTER_VALIDATE_INT))
         {
@@ -146,6 +174,7 @@
     <meta charset="utf-8">
     <title>CMS for Roy's Florist - <?= $productname?></title>
     <link rel="stylesheet" href="style.css" type="text/css">
+    <script src="js/main.js" type="text/javascript"></script>
 </head>
 <body>
     <div class="userinfo">
@@ -209,7 +238,7 @@
                 <?php foreach($array_comment as $comment): ?>
                         <div class="comment_thread">
                             <small><?=date("M d, Y,  g:i a",strtotime($comment['created'])) ?></small>
-                            <div class="moderate"><a href="show.php?id=<?=$id?>&deletecommentid=<?= $comment['id'] ?>">delete</a></div>
+                            <div class="moderate_del"><a href="show.php?id=<?=$id?>&deletecommentid=<?= $comment['id'] ?>">delete</a></div>
                             <div class="moderate"><a href="show.php?id=<?=$id?>&hidecommentid=<?= $comment['id'] ?>">hide</a></div>
                             <div class="clear"></div>
                             <div class="commment_content"><?= $comment['comment'] ?></div>

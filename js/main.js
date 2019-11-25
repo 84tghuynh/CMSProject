@@ -10,16 +10,16 @@ function deleteItem(e)
 	// Confirm that the user wants to reset the form.
 	if ( confirm('Are you sure?') )
 	{
-		
+
 		return true;
 	}
 
 	// Prevents the form from submit
 	e.preventDefault();
-	
+
 	// When using onReset="resetForm()" in markup, returning false would prevent
 	// the form from resetting
-	return false;	
+	return false;
 }
 
 /*
@@ -135,10 +135,10 @@ function formHasErrors()
 		}else{
 
 			if(requiredFields[i] == "email") errorFlag = emailAddressIsInvalid(errorFlag);
-			if(requiredFields[i] == "confirm") errorFlag = matchConfirmAndPassword(errorFlag);	
+			if(requiredFields[i] == "confirm") errorFlag = matchConfirmAndPassword(errorFlag);
 		}
 	}
-	
+
 	return errorFlag;
 }
 
@@ -167,7 +167,7 @@ function formLoginHasErrors()
 			if(requiredFields[i] == "email") errorFlag = emailAddressIsInvalid(errorFlag);
 		}
 	}
-	
+
 	return errorFlag;
 }
 
@@ -194,7 +194,7 @@ function formUpdateUserHasErrors()
 			if(requiredFields[i] == "email") errorFlag = emailAddressIsInvalid(errorFlag);
 		}
 	}
-	
+
 	return errorFlag;
 }
 
@@ -213,7 +213,7 @@ function formChangePasswordHasErrors()
 			errorFlag = true;
 		}
 	}
-	
+
 	return errorFlag;
 }
 
@@ -231,14 +231,14 @@ function formFieldHasInput(fieldElement)
 		// Invalid entry
 		return false;
 	}
-	
+
 	// Valid entry
 	return true;
 }
 
 /**
 *   Does validate an email address
-* 	return   True and displays Wanrning if the email address is invalid; 
+* 	return   True and displays Wanrning if the email address is invalid;
 *            if the email address is valid, not change the value of errorFlag, just return the value of errorFlag was passed.
 */
 function emailAddressIsInvalid(errorFlag)
@@ -286,7 +286,7 @@ function matchConfirmAndPassword(errorFlag)
  *
  * return  A string with leading and trailing white-space removed.
  */
-function trim(str) 
+function trim(str)
 {
 	// Uses a regex to remove spaces from a string.
 	return str.replace(/^\s+|\s+$/g,"");
@@ -305,10 +305,16 @@ function load()
 	let updateuser = document.getElementById("updateuser");
 	let changepassword = document.getElementById("changepassword");
 
+	var x = document.getElementsByClassName("moderate_del");
+	if(x != null)
+		for (var i = 0; i < x.length; i++) {
+		  x[i].addEventListener("click",deleteItem);
+		}
+
 	// Add event listener for the form submit
 	if(submitdelete != null)
 		submitdelete.addEventListener("click",deleteItem);
-		
+
 	// Add event listener for the form submit
 	if(deleteuser != null)
 		deleteuser.addEventListener("click",deleteItem);
@@ -316,7 +322,7 @@ function load()
 	// Add event listener for the form submit
 	if(registernormaluser != null)
 		registernormaluser.addEventListener("click", validate, false);
-	
+
 	// Add event listener for the form submit
 	if(adduser != null)
 		adduser.addEventListener("click", validate, false);
@@ -324,15 +330,15 @@ function load()
 	// Add event listener for the form submit
 	if(login != null)
 		login.addEventListener("click", validateLogin, false);
-	
+
 	// Add event listener for the form submit
 	if(updateuser != null)
 		updateuser.addEventListener("click", validateUpdateUser, false);
-	
+
 	// Add event listener for the form submit
 	// if(changepassword != null)
 	// 	changepassword.addEventListener("click", validateChangePassword);
-	
+
 
 }
 

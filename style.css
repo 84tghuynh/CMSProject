@@ -477,6 +477,10 @@ a:visited {
     margin-left: 5px;
 }
 
+.moderate_del{
+		float: left;
+		margin-left: 5px;
+}
 .comment_thread small{
     float: left;
 }
