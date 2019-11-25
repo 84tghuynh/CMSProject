@@ -471,3 +471,12 @@ a:visited {
 .warning{
     color: red;
 }
+
+.moderate{
+    float: left;
+    margin-left: 5px;
+}
+
+.comment_thread small{
+    float: left;
+}
