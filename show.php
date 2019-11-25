@@ -36,23 +36,44 @@
           filter_input(INPUT_GET, 'hidecommentid', FILTER_VALIDATE_INT)
         )
         {
-          $id = filter_input(INPUT_GET, 'id', FILTER_SANITIZE_NUMBER_INT);
+          $productid = filter_input(INPUT_GET, 'id', FILTER_SANITIZE_NUMBER_INT);
           $hidecommentid = filter_input(INPUT_GET, 'hidecommentid', FILTER_SANITIZE_NUMBER_INT);
 
-          header("Location: show.php?id={$id}");
+          // 1: hide
+          // 0: show
+          updateModerate($hidecommentid,$productid,1);
+
         }
 
       if(
           isset($_GET['id'])                                                &&
-          isset($_GET['deletecommentid'])                                     &&
+          isset($_GET['showcommentid'])                                     &&
+          filter_input(INPUT_GET, 'id', FILTER_VALIDATE_INT)                &&
+          filter_input(INPUT_GET, 'showcommentid', FILTER_VALIDATE_INT)
+        )
+        {
+          $productid = filter_input(INPUT_GET, 'id', FILTER_SANITIZE_NUMBER_INT);
+          $showcommentid = filter_input(INPUT_GET, 'showcommentid', FILTER_SANITIZE_NUMBER_INT);
+
+          // 1: hide
+          // 0: show
+          updateModerate($showcommentid,$productid,0);
+
+        }
+
+      if(
+          isset($_GET['id'])                                                &&
+          isset($_GET['deletecommentid'])                                   &&
           filter_input(INPUT_GET, 'id', FILTER_VALIDATE_INT)                &&
           filter_input(INPUT_GET, 'deletecommentid', FILTER_VALIDATE_INT)
         )
         {
-          $id = filter_input(INPUT_GET, 'id', FILTER_SANITIZE_NUMBER_INT);
+          $productid = filter_input(INPUT_GET, 'id', FILTER_SANITIZE_NUMBER_INT);
           $deletecommentid = filter_input(INPUT_GET, 'deletecommentid', FILTER_SANITIZE_NUMBER_INT);
 
-          header("Location: show.php?id={$id}");
+          deleteComment($deletecommentid,$productid);
+
+        //  header("Location: show.php?id={$id}");
         }
 
 
@@ -236,15 +257,31 @@
         <form id="editcomment" action="show.php" method="post">
             <div>
                 <?php foreach($array_comment as $comment): ?>
-                        <div class="comment_thread">
-                            <small><?=date("M d, Y,  g:i a",strtotime($comment['created'])) ?></small>
-                            <div class="moderate_del"><a href="show.php?id=<?=$id?>&deletecommentid=<?= $comment['id'] ?>">delete</a></div>
-                            <div class="moderate"><a href="show.php?id=<?=$id?>&hidecommentid=<?= $comment['id'] ?>">hide</a></div>
-                            <div class="clear"></div>
-                            <div class="commment_content"><?= $comment['comment'] ?></div>
-                            <h4><?= $comment['name'] ?></a></h4>
-                            <hr/>
-                        </div>
+                      <?php if($_SESSION['roletype']==1): ?>
+                          <div class="comment_thread">
+                              <small><?=date("M d, Y,  g:i a",strtotime($comment['created'])) ?></small>
+                              <div class="moderate_del"><a href="show.php?id=<?=$id?>&deletecommentid=<?= $comment['id'] ?>">delete</a></div>
+                              <?php if($comment['moderate'] == 0): ?>
+                                <div class="moderate"><a href="show.php?id=<?=$id?>&hidecommentid=<?= $comment['id'] ?>">hide</a></div>
+                              <?php else: ?>
+                                <div class="moderate"><a href="show.php?id=<?=$id?>&showcommentid=<?= $comment['id'] ?>">show</a></div>
+                              <?php endif ?>
+                              <div class="clear"></div>
+                              <div class="commment_content"><?= $comment['comment'] ?></div>
+                              <h4><?= $comment['name'] ?></a></h4>
+                              <hr/>
+                          </div>
+                      <?php else: ?>
+                          <?php if($comment['moderate'] == 0): ?>
+                            <div class="comment_thread">
+                              <small><?=date("M d, Y,  g:i a",strtotime($comment['created'])) ?></small>
+                              <div class="clear"></div>
+                              <div class="commment_content"><?= $comment['comment'] ?></div>
+                              <h4><?= $comment['name'] ?></a></h4>
+                              <hr/>
+                            </div>
+                          <?php endif ?>
+                      <?php endif ?>
                 <?php endforeach ?>
             </div>
             <div>

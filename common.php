@@ -1,11 +1,11 @@
 <?php
-    
+
      /**
     *   Does validate an email address
     * 	return  "noemail" : email does not provide
     *      "invalidemail" : email is invalid
     *        "validemail" : email is valid
-    *      
+    *
     */
     function validateEmail()
     {
@@ -34,7 +34,7 @@
 
     function matchConfirmAndPassword()
     {
-       
+
         if(!empty($_POST['password']) && !empty($_POST['confirm']))
         {
             $password = filter_input(INPUT_POST, 'password', FILTER_SANITIZE_FULL_SPECIAL_CHARS);
@@ -43,7 +43,7 @@
             if($password != $confirm)
                 return false;
         }
-        
+
         return true;
 
     }
@@ -61,7 +61,7 @@
         //  Build the parameterized SQL query and bind to the above sanitized values.
         $query = "INSERT INTO users(firstname,lastname,email,password,roletype,rolename) values (:firstname,:lastname,:email,:password,:roletype,:rolename )";
         $statement = $db->prepare($query);
-        
+
         $password = password_hash($password,PASSWORD_BCRYPT);
         //  Bind values to the parameters
         $statement->bindValue(':firstname',$firstname);
@@ -98,7 +98,7 @@
         //  Build the parameterized SQL query and bind to the above sanitized values.
         $query = "INSERT INTO users(firstname,lastname,email,password,roletype,rolename) values (:firstname,:lastname,:email,:password,:roletype,:rolename )";
         $statement = $db->prepare($query);
-        
+
         $password = password_hash($password,PASSWORD_BCRYPT);
         //  Bind values to the parameters
         $statement->bindValue(':firstname',$firstname);
@@ -131,13 +131,13 @@
     {
         require('connect.php');
         if(!empty($email)){
-           
+
             $query = 'SELECT email FROM users WHERE email = :email LIMIT 1';
             // A PDO::Statement is prepared from the query.
             $statement = $db->prepare($query);
             $statement->bindValue(':email',$email);
             // Execution on the DB server is delayed until we execute().
-            $statement->execute(); 
+            $statement->execute();
 
             if($statement->rowCount()>0) return true;
             else return false;
@@ -154,13 +154,13 @@
     {
         require('connect.php');
         if(!empty($email) && !empty($password) ){
-           
+
             $query = 'SELECT id,password, roletype,rolename FROM users WHERE email = :email LIMIT 1';
             // A PDO::Statement is prepared from the query.
             $statement = $db->prepare($query);
             $statement->bindValue(':email',$email);
             // Execution on the DB server is delayed until we execute().
-            $statement->execute(); 
+            $statement->execute();
 
             if($statement->rowCount()>0)
             {
@@ -175,9 +175,9 @@
 
                     return true;
                 }
-                        
+
                 else return false;
-            }  
+            }
             else return false;
         }
 
@@ -193,22 +193,22 @@
         $lastname =  filter_input(INPUT_POST, 'lastname', FILTER_SANITIZE_FULL_SPECIAL_CHARS);
         $email = filter_input(INPUT_POST, 'email', FILTER_SANITIZE_FULL_SPECIAL_CHARS);
         $roletype = filter_input(INPUT_POST, 'roletype',  FILTER_SANITIZE_NUMBER_INT);
-        
+
         $query ='';
         $statement ='';
-    
+
         $query     = "UPDATE users SET firstname = :firstname, lastname = :lastname, email = :email, roletype = :roletype, rolename = :rolename  WHERE id = :id";
         $statement = $db->prepare($query);
 
-              
-        $statement->bindValue(':id', $id, PDO::PARAM_INT);
-        $statement->bindValue(':firstname', $firstname); 
-        $statement->bindValue(':lastname', $lastname); 
-        $statement->bindValue(':email', $email); 
-        $statement->bindValue(':roletype', $roletype); 
 
-        if($roletype == 1 )  $statement->bindValue(':rolename', 'admin'); 
-        else $statement->bindValue(':rolename', 'user'); 
+        $statement->bindValue(':id', $id, PDO::PARAM_INT);
+        $statement->bindValue(':firstname', $firstname);
+        $statement->bindValue(':lastname', $lastname);
+        $statement->bindValue(':email', $email);
+        $statement->bindValue(':roletype', $roletype);
+
+        if($roletype == 1 )  $statement->bindValue(':rolename', 'admin');
+        else $statement->bindValue(':rolename', 'user');
         //  Execute the UPDATE
         //  execute() will check for possible SQL injection and remove if necessary
         $flag = $statement->execute();
@@ -227,15 +227,15 @@
 
         $query ='';
         $statement ='';
-    
+
         $query     = "UPDATE users SET  password = :password  WHERE id = :id";
-       
+
         $statement = $db->prepare($query);
 
         $password = password_hash($password,PASSWORD_BCRYPT);
 
         $statement->bindValue(':id', $id, PDO::PARAM_INT);
-        $statement->bindValue(':password', $password); 
+        $statement->bindValue(':password', $password);
         $flag = $statement->execute();
 
         if($flag){
@@ -251,17 +251,17 @@
         $productid = filter_input(INPUT_POST,'id',FILTER_SANITIZE_NUMBER_INT);
         $username =  filter_input(INPUT_POST, 'username', FILTER_SANITIZE_FULL_SPECIAL_CHARS);
         $comment = filter_input(INPUT_POST, 'editcomment', FILTER_SANITIZE_FULL_SPECIAL_CHARS);
-       
+
         //  Build the parameterized SQL query and bind to the above sanitized values.
         $query = "INSERT INTO comments(productid,userid,name,comment) values (:productid,:userid,:name,:comment )";
         $statement = $db->prepare($query);
-        
+
         //  Bind values to the parameters
         $statement->bindValue(':productid',$productid);
         $statement->bindValue(':userid',0);
         $statement->bindValue(':name',$username);
         $statement->bindValue(':comment',$comment);
-      
+
         //  Execute the INSERT.
         //  execute() will check for possible SQL injection and remove if necessary
 
@@ -281,17 +281,17 @@
         $username =  $_SESSION['email'];
         $userid = $_SESSION['id'];
         $comment = filter_input(INPUT_POST, 'editcomment', FILTER_SANITIZE_FULL_SPECIAL_CHARS);
-       
+
         //  Build the parameterized SQL query and bind to the above sanitized values.
         $query = "INSERT INTO comments(productid,userid,name,comment) values (:productid,:userid,:name,:comment )";
         $statement = $db->prepare($query);
-        
+
         //  Bind values to the parameters
         $statement->bindValue(':productid',$productid);
         $statement->bindValue(':userid',$userid);
         $statement->bindValue(':name',$username);
         $statement->bindValue(':comment',$comment);
-      
+
         //  Execute the INSERT.
         //  execute() will check for possible SQL injection and remove if necessary
 
@@ -303,6 +303,44 @@
         }
     }
 
-  
+    function deleteComment($commentid,$productid)
+    {
+        require('connect.php');
+        $query     = "DELETE FROM comments WHERE id = :id";
+        $statement = $db->prepare($query);
+        $statement->bindValue(':id', $commentid, PDO::PARAM_INT);
+        //  Execute the DELETE
+        //  execute() will check for possible SQL injection and remove if necessary
+
+        $flag = $statement->execute();
+
+        if($flag){
+            header("Location: show.php?id={$productid}");
+            exit();
+        }
+    }
+
+    function updateModerate($commentid,$productid,$moderate)
+    {
+      require('connect.php');
+      $query ='';
+      $statement ='';
+
+      $query     = "UPDATE comments SET moderate = :moderate  WHERE id = :id";
+      $statement = $db->prepare($query);
+
+      $statement->bindValue(':id', $commentid, PDO::PARAM_INT);
+      $statement->bindValue(':moderate', $moderate);
+
+      //  Execute the UPDATE
+      //  execute() will check for possible SQL injection and remove if necessary
+      $flag = $statement->execute();
+
+      if($flag){
+          header("Location: show.php?id={$productid}");
+          exit();
+      }
+
+    }
 
 ?>
