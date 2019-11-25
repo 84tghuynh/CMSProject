@@ -62,9 +62,11 @@
             <div><img src="img/ninja.png" alt="Florist"></div>
             <div><a href="admin.php"><h1>CMS For Roy's Florist </h1></a></div>
         </div>
-        <div id="header-right">
-            <div><a href="umanage.php">Manage User</a></div>
-        </div>
+        <?php if($_SESSION['roletype']==1): ?>
+            <div id="header-right">
+                <div><a href="umanage.php">Manage User</a></div>
+            </div>
+        <?php endif ?>
         <div id="header-right">
             <div><a href="category.php">Category</a></div>
         </div>
