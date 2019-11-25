@@ -292,7 +292,6 @@ a:visited {
     margin: 1px 0;
 }
 
-
 .category_name h2 a {
     text-decoration: none;
     color: #0f0f0f;
@@ -449,4 +448,26 @@ a:visited {
 }
 .commment_content{
     margin: 1px 0;
+}
+
+#editcomment #captcha {
+    display: block;
+    float: left;
+    margin-bottom: 30px;
+    padding: 2px;
+    color: #333;
+    line-height: 1.6em;
+    border: 1px solid #b0abab;
+    border-radius: 2px;
+    font-size: 1em;
+    width: 140px;
+}
+
+#editcomment li img {
+    width: 140px;
+    height: 30px;
+}
+
+.warning{
+    color: red;
 }

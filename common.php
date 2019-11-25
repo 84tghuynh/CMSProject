@@ -219,7 +219,6 @@
         }
     }
 
-
     function changePassword()
     {
         require('connect.php');

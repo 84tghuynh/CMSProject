@@ -121,22 +121,22 @@
         !empty($_POST['username'])                       && 
         strlen(trim($_POST['username']))!=0              && 
         strlen($_POST['username'])>=1                    && 
-        !empty($_POST['editcomment'])                       && 
-        strlen(trim($_POST['editcomment']))!=0              && 
-        strlen($_POST['editcomment'])>=1                   
-        
+        !empty($_POST['editcomment'])                    && 
+        strlen(trim($_POST['editcomment']))!=0           && 
+        strlen($_POST['editcomment'])>=1                 &&
+        !empty($_POST['captcha'])                        &&
+        strlen(trim($_POST['captcha']))==6               
     )
     {
-
-        insertComment();
-    
+        session_start();
+        if(trim($_POST['captcha']) == $_SESSION['captcha'])
+            insertComment();
+        else $errorFlag = true;
     }else{
         if(isset($_POST['addcomment']) && (empty($_POST['username']) || strlen(trim($_POST['username'])) == 0))   $errorFlag = true;
         if(isset($_POST['addcomment']) && (empty($_POST['editcomment']) || strlen(trim($_POST['editcomment'])) == 0))  $errorFlag = true;
+        if(isset($_POST['addcomment']) && (empty($_POST['captcha']) || strlen(trim($_POST['captcha'])) != 6))  $errorFlag = true;
     }
-
-
-
 ?>
 
 <!DOCTYPE html>
@@ -163,7 +163,6 @@
     <div id="content">
         <div class="product_title">
             <h2><a href="ushow.php?id=<?=$id?>"><?=$productname?></a></h2>
-            <!-- <div class="edit_link"><a href="edit.php?id=<?=$id?>">edit</a></div> -->
             <div class="clear"></div>
             <small><?=date("M d, Y,  g:i a",strtotime($created))?></small>
         </div>
@@ -200,7 +199,6 @@
         <h3>Comments</h3>
         <div>
             <?php foreach($array_comment as $comment): ?>
-               
                     <div class="comment_thread">
                         <small><?=date("M d, Y,  g:i a",strtotime($comment['created'])) ?></small>  
                         <div class="commment_content"><?= $comment['comment'] ?></div>
@@ -208,18 +206,17 @@
                         <div class="clear"></div>
                         <hr/>
                     </div>
-               
             <?php endforeach ?>
         </div>
         <div>
                 <?php  if($errorFlag) :?>
                 
                     <?php if(empty($_POST['username']) || strlen(trim($_POST['username'])) ==0 ):?>
-                        <p>WARNING: Please type at least one character in username</p>
+                        <p class='warning'>WARNING: Please type at least one character in username</p>
                     <?php endif ?>
 
                     <?php if(empty($_POST['editcomment']) ||  strlen(trim($_POST['editcomment']))==0):?>
-                        <p>WARNING: Please type at least one character in comment</p>
+                        <p class='warning'>WARNING: Please type at least one character in comment</p>
                     <?php endif ?>
 
                 <?php endif ?>
@@ -236,7 +233,6 @@
                             <input name="id" type="hidden" value="<?=$_POST['id']?>"/>
                         <?php endif ?>
                     </li>
-
                     <li>
                         <?php  if($errorFlag) :?>
                             <?php if(!empty($_POST['editcomment'])):?>
@@ -264,6 +260,20 @@
             </div>
             <div>
                 <ol>
+                    <li>
+                        <div>
+                            <?php  if($errorFlag) :?>
+                                
+                                <?php if(empty($_POST['captcha']) ||  strlen(trim($_POST['captcha']))!=6 || (trim($_POST['captcha']) == $_SESSION['captcha']) ):?>
+                                    <p class='warning'>WARNING: Please check the captcha</p>
+                                <?php endif ?>
+
+                            <?php endif ?>
+                        </div>
+                        <input type="text" name="captcha" id="captcha" placeholder="Captcha">
+                        <img src="captcha/captcha.php" alt="Image created by a PHP script">
+                    </li>
+                    <div class="clear"></div>
                     <li>
                         <input type="submit" name="addcomment" id="addcomment" value="Add Comment">
                     </li>
