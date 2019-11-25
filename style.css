@@ -1,0 +1,452 @@
+html,body,div,h1,h2,h3,h4,img,ol,ul,li,header,section,footer,button,input,fieldset,p{
+	margin: 0;
+	padding: 0;
+    box-sizing:border-box;
+    list-style: none;
+}
+
+.clear{
+    clear: both;
+}
+
+body{
+    padding: 30px;
+    margin: 10px auto;
+}
+
+#header{
+    margin: 10px auto;
+}
+
+#header-right {
+    float: right
+}
+
+#header-right div{
+    font-size: 1.2em;
+    line-height: 2em;
+    padding: 5px;
+}
+
+#header-left img {
+    float: left;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    width: 3em;
+    height: 3em;
+  }
+#header-left h1 {
+    float: left;
+    margin-left: 10px;
+}
+
+#content {
+    margin: 30px auto;
+}
+
+#content #recent {
+    margin: 30px auto;
+}
+
+.product_title h2 {
+    float: left;
+}
+
+
+.product_title h2 a {
+    text-decoration: none;
+}
+
+.product_title h3 {
+    float: left;
+}
+
+
+.product_title h3 a {
+    text-decoration: none;
+}
+
+.edit_link {
+    float: left;
+    line-height: 1.2em;
+    margin-left: 8px;
+}
+
+.product_content{
+    margin: 10px auto 30px auto;
+}
+
+#createproduct li label {
+    display: inline-block;
+    margin-bottom: 15px;
+    color: blue;
+    font-size: 1.3em;
+}
+
+#createproduct #productname {
+    display: block;
+    width: 40%;
+	margin-bottom: 25px;
+	text-align: left;
+    color: #333;
+    line-height: 1.2em;
+    font-size: 1.1em;
+    padding: 2px;
+}
+#price {
+    display: block;
+    width: 15%;
+	margin-bottom: 25px;
+	text-align: left;
+    color: #333;
+    line-height: 1.2em;
+    font-size: 1.1em;
+    padding: 2px;
+}
+textarea{
+    white-space: pre-line;
+}
+#createproduct li textarea {
+    display: block;
+    width: 100%;
+    margin-bottom: 25px;
+    height: 20em;
+}
+
+#createproduct #smbcreateproduct {
+    display: block;
+    margin-bottom: 30px;
+    padding: 2px;
+    color: #333;
+    line-height: 1.6em;
+    border: 1px solid #b0abab;
+    border-radius: 2px;
+    font-size: 1em;
+}
+
+#editblog li label {
+    display: inline-block;
+    margin-bottom: 15px;
+    color: blue;
+    font-size: 1.3em;
+}
+
+#editblog #editblogtitle {
+    display: block;
+    width: 40%;
+	margin-bottom: 25px;
+	text-align: left;
+    color: #333;
+    line-height: 1.2em;
+    font-size: 1.1em;
+    padding: 2px;
+}
+
+#editblog li textarea {
+    display: block;
+    width: 100%;
+    margin-bottom: 25px;
+    height: 20em;
+}
+
+#editblog #sumbitupdate {
+    display: block;
+    float: left;
+    margin-bottom: 30px;
+    padding: 2px;
+    color: #333;
+    line-height: 1.6em;
+    border: 1px solid #b0abab;
+    border-radius: 2px;
+    font-size: 1em;
+}
+
+#editblog #sumbitdelete {
+    display: block;
+    float: right;
+    margin-bottom: 30px;
+    padding: 2px;
+    color: #333;
+    line-height: 1.6em;
+    border: 1px solid #b0abab;
+    border-radius: 2px;
+    font-size: 1em;
+}
+
+a:visited {
+    color: blue;
+  }
+
+.size {
+    display: flex;
+    flex-direction: row;
+}
+
+.standard {
+    width: 200px;
+    height: 300px;
+    border: 1px solid royalblue;
+    padding: 5px;
+    margin: 0 2px;
+}
+.deluxe {
+    width: 200px;
+    height: 300px;
+    border: 1px solid royalblue;
+    padding: 5px;
+    margin: 0 2px;
+}
+
+.premium {
+    width: 200px;
+    height: 300px;
+    border: 1px solid royalblue;
+    padding: 5px;
+    margin: 0 2px;
+}
+
+/** Category **/
+#createcategory li label {
+    display: inline-block;
+    margin-bottom: 15px;
+    color: blue;
+    font-size: 1.3em;
+}
+
+#createcategory #categoryname {
+    display: block;
+    width: 40%;
+	margin-bottom: 25px;
+	text-align: left;
+    color: #333;
+    line-height: 1.2em;
+    font-size: 1.1em;
+    padding: 2px;
+}
+
+#createcategory #smbcreatecategory {
+    display: block;
+    margin-bottom: 30px;
+    padding: 2px;
+    color: #333;
+    line-height: 1.6em;
+    border: 1px solid #b0abab;
+    border-radius: 2px;
+    font-size: 1em;
+}
+
+#editcategory li label {
+    display: inline-block;
+    margin-bottom: 15px;
+    color: blue;
+    font-size: 1.3em;
+}
+
+#editcategory #editcategoryname {
+    display: block;
+    width: 40%;
+	margin-bottom: 25px;
+	text-align: left;
+    color: #333;
+    line-height: 1.2em;
+    font-size: 1.1em;
+    padding: 2px;
+}
+
+#editcategory #smbcreatecategory {
+    display: block;
+    margin-bottom: 30px;
+    padding: 2px;
+    color: #333;
+    line-height: 1.6em;
+    border: 1px solid #b0abab;
+    border-radius: 2px;
+    font-size: 1em;
+}
+
+#editcategory #sumbitupdate {
+    display: block;
+    float: left;
+    margin-bottom: 30px;
+    padding: 2px;
+    color: #333;
+    line-height: 1.6em;
+    border: 1px solid #b0abab;
+    border-radius: 2px;
+    font-size: 1em;
+}
+
+#editcategory #sumbitdelete {
+    display: block;
+    float: right;
+    margin-bottom: 30px;
+    padding: 2px;
+    color: #333;
+    line-height: 1.6em;
+    border: 1px solid #b0abab;
+    border-radius: 2px;
+    font-size: 1em;
+}
+
+.category_name h2 {
+    margin: 1px 0;
+}
+
+
+.category_name h2 a {
+    text-decoration: none;
+    color: #0f0f0f;
+}
+
+.category_name a:visited {
+    color: #0f0f0f;
+}
+
+/** REGISTER */
+.register {
+    border: 1px solid #c1c1c4;
+    margin: 2px auto;
+    width: 600px;
+    border-radius: 5px;
+}
+
+.error {
+	color: red;
+	display: none;
+}
+
+.registerError {
+	margin-left: 110px;
+}
+
+.register label {
+    display: inline-block;
+    margin: 5px;
+    padding: 3px;
+    width: 100px;
+}
+
+.register input{
+    margin: 5px;
+    padding: 3px;
+    border: 1px solid #c1c1c4;
+    border-radius: 3px;
+}
+
+.register select{
+    margin: 5px;
+    padding: 3px;
+    border: 1px solid #c1c1c4;
+    border-radius: 3px;
+}
+
+.register form{
+    margin: 5px;
+    padding:3px;
+}
+
+.register fieldset {
+    border: 1px solid #c1c1c4;
+    border-radius: 5px;
+}
+
+.register #reg-title{
+    margin: 5px;
+    padding: 3px;
+}
+
+.register button{
+    margin: 5px;
+    padding: 3px;
+    border: 1px solid #c1c1c4;
+    border-radius: 3px;
+}
+
+/** USER INFO DISPLAY */
+.userinfo{
+    float: right;
+}
+
+/** Table User*/
+
+#tblUser{
+	border: 1px solid #5E7410;
+	text-align: left;
+	margin: 2px auto;
+	width:800px;
+}
+
+#tblUser thead th {
+	background-color: #fdfafa;
+	border: 1px solid #5E7410;
+	padding: 9px 9px;
+	font-size: 15px;
+}
+
+#tblUser tbody tr td {
+	border: 1px solid #5E7410;
+	padding: 9px 9px;
+}
+
+#tblUser tbody tr:nth-child(even){
+	background-color: #fafdfc;
+}
+
+/** COMMENTS */
+
+.comment{
+    float: left;
+    margin-top: 3px;
+    margin-bottom: 50px;
+}
+
+#editcomment{
+    width: 800px;
+    height: 50px;
+}
+
+#editcomment li textarea {
+    display: block;
+    width: 100%;
+    margin-top: 10px;
+    margin-bottom: 25px;
+    height: 10em;
+}
+
+#editcomment #addcomment {
+    display: block;
+    float: left;
+    margin-bottom: 30px;
+    padding: 2px;
+    color: #333;
+    line-height: 1.6em;
+    border: 1px solid #b0abab;
+    border-radius: 2px;
+    font-size: 1em;
+}
+
+
+#editcomment li label {
+    display: inline-block;
+    margin-bottom: 15px;
+    color: blue;
+    font-size: 1.3em;
+}
+
+#editcomment #username {
+    display: block;
+    width: 40%;
+	margin-bottom: 25px;
+	text-align: left;
+    color: #333;
+    line-height: 1.2em;
+    font-size: 1.1em;
+    padding: 2px;
+}
+
+.comment_thread{
+    margin: 1px 0;
+}
+.commment_content{
+    margin: 1px 0;
+}
