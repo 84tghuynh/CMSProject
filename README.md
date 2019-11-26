@@ -26,8 +26,10 @@ create/delete or modify information of the other users included users in the adm
 The second type is users of moderate group. These users only can work on features related to the contents of product as
 functions of the system are listed above except for the functions of creating/deleting or modifying information of the
 other users.
+
 IV. Cost
 The total cost of the system will be $500, including the software integration and deployment tasks that will do at Roy’s
 Florist site.
+
 V. Timeline
 The software will be completed and delivered in 6 weeks from the contract date.
