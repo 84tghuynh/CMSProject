@@ -1,8 +1,26 @@
 <?php
+  require('connect.php');
   session_start();
+  $searchInput = '';
   if(isset($_SESSION['email']))
   {
-    if(isset($_POST['search'])) echo "ehoo00000000000000000000000";
+      if
+      (
+        isset($_POST['search']) &&
+        !empty($_POST['searchbox'])                    &&
+        strlen(trim($_POST['searchbox']))!=0           &&
+        strlen($_POST['searchbox'])>=1
+      )
+      {
+          $searchInput = filter_input(INPUT_POST, 'searchbox', FILTER_SANITIZE_FULL_SPECIAL_CHARS);
+          // Query comment
+          $query = 'SELECT * FROM products WHERE productName LIKE \'%'.$searchInput.'%\''.' OR '.'description LIKE  \'%'.$searchInput.'%\'';
+
+          $stmt_product = $db->prepare($query);
+          // $stmt_product->bindValue(':searchInput',$searchInput);
+          $stmt_product->execute();
+          $array_product = $stmt_product->fetchAll();
+      }
   }else{
      header("Location: login.php");
      exit();
@@ -37,8 +55,32 @@
     <div class="clear"></div>
     <div id="content">
         <div id="recent">
-            <h2>List of products of all Categories</h2>
+            <h2>The search results of keyword: <?= $searchInput ?></h2>
         </div>
+        <?php
+        if
+        (
+          isset($_POST['search'])                        &&
+          !empty($_POST['searchbox'])                    &&
+          strlen(trim($_POST['searchbox']))!=0           &&
+          strlen($_POST['searchbox'])>=1
+        ):
+        ?>
+            <?php if(count($array_product) >0 ): ?>
+                <?php foreach($array_product as $product): ?>
+                        <div class="product_title">
+                            <h3><a href="show.php?id=<?= $product['productId'] ?>"><?= $product['productName'] ?></a></h3>
+                            <div class="edit_link"><a href="edit.php?id=<?= $product['productId'] ?>">edit</a></div>
+                            <div class="clear"></div>
+                        </div>
+                <?php endforeach ?>
+            <?php else: ?>
+                <p> No product matches </p>
+
+            <?php endif ?>
+
+        <?php endif ?>
+
     </div>
 </body>
 </html>

@@ -326,9 +326,10 @@
       $query ='';
       $statement ='';
 
-      $query     = "UPDATE comments SET moderate = :moderate  WHERE id = :id";
+      $query     = "UPDATE comments SET moderate = :moderate, created=created  WHERE id = :id";
       $statement = $db->prepare($query);
 
+      // echo "commentid: ".$commentid." productid: ".$productid;
       $statement->bindValue(':id', $commentid, PDO::PARAM_INT);
       $statement->bindValue(':moderate', $moderate);
 
