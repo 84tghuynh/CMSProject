@@ -198,14 +198,7 @@
     <script src="js/main.js" type="text/javascript"></script>
 </head>
 <body>
-    <div class="userinfo">
-      <p><strong>User: </strong><?= $_SESSION['email'] ?> - <strong>Role: </strong><?= $_SESSION['rolename'] ?> </p>
-    </div>
-    <div class="clear"></div>
-    <div class="userinfo">
-        <div><a href="logout.php"><h4>Logout</h4></a></div>
-    </div>
-    <div class="clear"></div>
+    <?php include("head.php"); ?>
     <div id="header">
         <div id="header-left">
             <div><img src="img/ninja.png" alt="Florist"></div>
@@ -229,7 +222,6 @@
         <div>
         <h4> Price: $<?= $price ?> </h4>
         </div>
-
             <?php  if($image != ''): ?>
                 <div class='medium'>
                     <img src= "<?='uploads/'.$filename.'_medium.'.$ext  ?>" alt="<?= $filename.'_medium.'.$ext ?>" />

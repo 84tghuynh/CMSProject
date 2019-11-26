@@ -484,3 +484,22 @@ a:visited {
 .comment_thread small{
     float: left;
 }
+
+#searchbox {
+		width: 450px;
+    margin: 5px;
+    padding: 3px;
+    border: 1px solid #c1c1c4;
+    border-radius: 3px;
+}
+
+#searchbutton{
+    margin: 5px;
+    padding: 3px;
+    border: 1px solid #c1c1c4;
+    border-radius: 3px;
+}
+
+#search {
+	float: left;
+}

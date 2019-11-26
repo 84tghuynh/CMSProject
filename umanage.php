@@ -1,34 +1,34 @@
 <?php
 
     /**
-     * Index.php: 
+     * Index.php:
      *           + query database gets 5 most recent blog posts displayed in reverse chronological order.
      *           + For each of these posts you should display: Title, Timestamp, Content
      *           + •	Blog post titles link to full page for each post.
      *           + •	If blog content is larger than 200 character the displayed content is truncated to 200 characters.
-     *           + •	If the content is truncated a "Read Full Post" link should be displayed after the content. 
-     *           + •	An edit link is displayed for each post. 
-     *           + •	A "New Post" link 
+     *           + •	If the content is truncated a "Read Full Post" link should be displayed after the content.
+     *           + •	An edit link is displayed for each post.
+     *           + •	A "New Post" link
      * Author: Giang Truong, Huynh
      * Updated: Sep 29, 2019
-     * 
+     *
      */
     // require('authenticate.php');
-    session_start(); 
+    session_start();
     if(isset($_SESSION['email'])&& ($_SESSION['roletype'] ==1) )
     {
         require('connect.php');
-        
+
         // SQL is written as a String.
         $query = 'SELECT * FROM users ORDER BY created DESC';
         // A PDO::Statement is prepared from the query.
         $statement = $db->prepare($query);
         // Execution on the DB server is delayed until we execute().
-        $statement->execute(); 
-        
+        $statement->execute();
+
         $array_users = $statement->fetchAll();
 
-      
+
     }else{
        header("Location: adminlogin.php");
        exit();
@@ -43,14 +43,7 @@
     <link rel="stylesheet" href="style.css" type="text/css">
 </head>
 <body>
-    <div class="userinfo">
-      <p><strong>User: </strong><?= $_SESSION['email'] ?> - <strong>Role: </strong><?= $_SESSION['rolename'] ?> </p>
-    </div>
-    <div class="clear"></div>
-    <div class="userinfo">
-        <div><a href="logout.php"><h4>Logout</h4></a></div>
-    </div>
-    <div class="clear"></div>
+    <?php include("head.php"); ?>
     <div id="header">
         <div id="header-left">
             <div><img src="img/ninja.png" alt="Florist"></div>

@@ -1,9 +1,9 @@
 <?php
     require('common.php');
     $errorFlag = false;
-   
-       
-    session_start(); 
+
+
+    session_start();
     if(isset($_SESSION['email'])&& ($_SESSION['roletype'] ==1) )
     {
         //Show
@@ -39,14 +39,14 @@
          * update
         */
         if (
-                isset($_POST['updateuser'])      && 
-                (validateEmail() == 'validemail' )               
+                isset($_POST['updateuser'])      &&
+                (validateEmail() == 'validemail' )
             )
         {
-        
+
         if( $_SESSION['old_email'] != trim($_POST['email']) )
         {
-                if(checkExistingUser(trim($_POST['email'])) ) 
+                if(checkExistingUser(trim($_POST['email'])) )
                 {
                     $errorFlag = true;
                 }
@@ -63,8 +63,8 @@
          * delete
         */
         if (
-            isset($_POST['deleteuser'])                             && 
-            filter_input(INPUT_POST, 'id', FILTER_VALIDATE_INT)               
+            isset($_POST['deleteuser'])                             &&
+            filter_input(INPUT_POST, 'id', FILTER_VALIDATE_INT)
         )
         {
                 require('connect.php');
@@ -76,9 +76,9 @@
                 $statement->bindValue(':id', $id, PDO::PARAM_INT);
                 //  Execute the DELETE
                 //  execute() will check for possible SQL injection and remove if necessary
-                
+
                 $flag = $statement->execute();
-                
+
                 if($flag){
                     header("Location: umanage.php");
                     exit();
@@ -103,14 +103,7 @@
     <script src="js/main.js" type="text/javascript"></script>
 </head>
 <body>
-    <div class="userinfo">
-      <p><strong>User: </strong><?= $_SESSION['email'] ?> - <strong>Role: </strong><?= $_SESSION['rolename'] ?> </p>
-    </div>
-    <div class="clear"></div>
-    <div class="userinfo">
-        <div><a href="logout.php"><h4>Logout</h4></a></div>
-    </div>
-    <div class="clear"></div>
+    <?php include("head.php"); ?>
     <div id="header">
         <div id="header-left">
             <div><img src="img/ninja.png" alt="Florist"></div>
@@ -157,7 +150,7 @@
                                 <?php if($_GET): ?>
                                     <input id="lastname" name="lastname" type="text" value="<?=$lastname?>" autofocus />
                                 <?php else: ?>
-                                    <input id="lastname" name="lastname" type="text" value="<?= $_POST['lastname'] ?>" /> 
+                                    <input id="lastname" name="lastname" type="text" value="<?= $_POST['lastname'] ?>" />
                                 <?php endif ?>
                         <?php endif ?>
                     </li>
@@ -181,24 +174,24 @@
 							<label for="email">Email</label>
                             <?php if($errorFlag): ?>
                                 <?php if(validateEmail() == "noemail"): ?>
-                                    <input id="email" name="email" type="text" /> 
+                                    <input id="email" name="email" type="text" />
                                     <p class="registerError error" id="email_error" style="display: block;">* Required field</p>
                                <?php  elseif(validateEmail() == "invalidemail"): ?>
-                                    <input id="email" name="email" type="text" value="<?= trim($_POST['email']) ?>"/> 
+                                    <input id="email" name="email" type="text" value="<?= trim($_POST['email']) ?>"/>
                                     <p class="registerError error" id="emailformat_error" style="display: block;">* Invalid email address</p>
                                 <?php  elseif( ($_SESSION['old_email'] != trim($_POST['email']) )&&checkExistingUser(trim($_POST['email']))): ?>
-                                    <input id="email" name="email" type="text" value="<?= trim($_POST['email']) ?>"/> 
+                                    <input id="email" name="email" type="text" value="<?= trim($_POST['email']) ?>"/>
                                     <p class="registerError error" id="emailformat_error" style="display: block;">* Email address existed</p>
                                 <?php  else: ?>
-                                    <input id="email" name="email" type="text" value="<?= trim($_POST['email']) ?>"/> 
+                                    <input id="email" name="email" type="text" value="<?= trim($_POST['email']) ?>"/>
                                     <p class="registerError error" id="email_error">* Required field</p>
                                     <p class="registerError error" id="emailformat_error">* Invalid email address</p>
                                 <?php endif ?>
-                            <?php else: ?>  
+                            <?php else: ?>
                                 <?php if($_GET): ?>
                                     <input id="email" name="email" type="text"  value="<?=$email?>" autofocus />
                                 <?php else: ?>
-                                    <input id="email" name="email" type="text" value="<?= trim($_POST['email']) ?>"/> 
+                                    <input id="email" name="email" type="text" value="<?= trim($_POST['email']) ?>"/>
                                 <?php endif ?>
 
                                 <p class="registerError error" id="email_error">* Required field</p>
@@ -214,7 +207,7 @@
                                 <?php else: ?>
                                     <option value="0">User</option>
                                 <?php endif ?>
-                                
+
                                 <?php if($roletype == 1 ): ?>
                                     <option value="1" selected >Admin</option>
                                 <?php else: ?>
@@ -226,7 +219,7 @@
                                 <?php else: ?>
                                     <option value="0">User</option>
                                 <?php endif ?>
-                                
+
                                 <?php if($_POST['roletype'] == 1 ): ?>
                                     <option value="1" selected >Admin</option>
                                 <?php else: ?>

@@ -1,35 +1,35 @@
 <?php
-   
+
     /**
      * edit.php - show/update/delete
      *   Show blog before editing
      *  •	Provides a form where the user can edit a specific post title and contents.
-     *  •	The post being edited is determined by a GET parameter in the URL. 
+     *  •	The post being edited is determined by a GET parameter in the URL.
      *      This parameter should be the post's primary key id from the database table.
      *  •	The title and content of the post being edited should appear in the form.
      *  •	The form includes a button for updating the post in the database.
      *  •	The form includes a button to delete the current post from the database.
-     * 
+     *
      *  Validation
      *   •	An updated Posts are validated to ensure the title and content are both at least 1 character in length.
      *      Warning: users if title or content is empty
-     *   •	All user submitted strings (POSTed titles and blog content) must sanitized 
+     *   •	All user submitted strings (POSTed titles and blog content) must sanitized
      *      using input_filter and inserted/updated using PDO statements with placeholders bound to values.
-     *   •	Redirect 
+     *   •	Redirect
      *          + show.php after update succesfully
      *          + admin.php after delete successully
      *          + admin.php if id is not an integer when update or delete
-     * 
+     *
      *  Author: Giang Truong, Huynh
      *  Updated: Sep 29, 2019
-     * 
+     *
      */
 
-     
+
    // require('authenticate.php');
     require('upload_filter_origin.php');
     require('connect.php');
-    
+
     $errorFlag = false;
     $productdetail ='';
     $id='';
@@ -41,7 +41,7 @@
     $description ='';
     $categoryid ='';
 
-    session_start(); 
+    session_start();
     if(isset($_SESSION['email']))
     {
         //Show
@@ -93,12 +93,12 @@
         }
 
         //Update
-        if (isset($_POST['updateblog'])                             && 
-            !empty($_POST['editblogtitle'])                         && 
-            strlen(trim($_POST['editblogtitle']))!=0                && 
-            strlen($_POST['editblogtitle'])>=1                      && 
-            !empty($_POST['editblogcontent'])                       && 
-            strlen(trim($_POST['editblogcontent']))!=0              && 
+        if (isset($_POST['updateblog'])                             &&
+            !empty($_POST['editblogtitle'])                         &&
+            strlen(trim($_POST['editblogtitle']))!=0                &&
+            strlen($_POST['editblogtitle'])>=1                      &&
+            !empty($_POST['editblogcontent'])                       &&
+            strlen(trim($_POST['editblogcontent']))!=0              &&
             strlen($_POST['editblogcontent'])>=1                    &&
             filter_var($_POST['price'],FILTER_VALIDATE_FLOAT)       &&
             filter_input(INPUT_POST, 'id', FILTER_VALIDATE_INT)     &&
@@ -116,7 +116,7 @@
 
             $image_filename ='';
 
-            if (image_upload_detected()) { 
+            if (image_upload_detected()) {
                 $image_filename        = $_FILES['image']['name'];
                 $temporary_image_path  = $_FILES['image']['tmp_name'];
                 $new_image_path        = file_upload_path($image_filename);
@@ -138,10 +138,10 @@
                 $statement = $db->prepare($query);
                 $statement->bindValue(':image',$image_filename);
             }
-        
-        
 
-            $statement->bindValue(':productname', $productname);        
+
+
+            $statement->bindValue(':productname', $productname);
             $statement->bindValue(':description', $description);
             $statement->bindValue(':id', $id, PDO::PARAM_INT);
             $statement->bindValue(':price',$price);
@@ -164,12 +164,12 @@
                 $flag = $statement->execute();
 
             }
-            
+
             if($flag){
                 header("Location: show.php?id={$id}");
                 exit();
             }
-        
+
         }elseif (isset($_POST['updateblog']) && !filter_input(INPUT_POST, 'id', FILTER_VALIDATE_INT))
         {
             header("Location: admin.php");
@@ -179,8 +179,8 @@
             if(isset($_POST['updateblog']) && (empty($_POST['editblogcontent']) || strlen(trim($_POST['editblogcontent'])) ==0 )) $errorFlag = true;
             if(isset($_POST['updateblog']) && (empty($_POST['price']) || !filter_var($_POST['price'],FILTER_VALIDATE_FLOAT)))  $errorFlag = true;
             if(isset($_POST['updateblog']) && !filter_var($_POST['category'],FILTER_VALIDATE_INT))  $errorFlag = true;
-        
-            if(isset($_POST['updateblog']) && filter_var($_POST['category'],FILTER_VALIDATE_INT))  
+
+            if(isset($_POST['updateblog']) && filter_var($_POST['category'],FILTER_VALIDATE_INT))
                                                 $categoryid = filter_input(INPUT_POST,'category',FILTER_SANITIZE_NUMBER_INT);
 
             // require('connect.php');
@@ -205,7 +205,7 @@
             $statement->bindValue(':id', $id, PDO::PARAM_INT);
             //  Execute the DELETE
             //  execute() will check for possible SQL injection and remove if necessary
-            
+
             $flag = $statement->execute();
 
             if($flag)
@@ -221,12 +221,12 @@
                 $flag = $statement->execute();
 
             }
-            
+
             if($flag){
                 header("Location: admin.php");
                 exit();
             }
-        
+
         } elseif (isset($_POST['deleteblog']) && !filter_input(INPUT_POST, 'id', FILTER_VALIDATE_INT) )
         {
             header("Location: admin.php");
@@ -248,14 +248,7 @@
     <script>tinymce.init({selector:'textarea'});</script>
 </head>
 <body>
-    <div class="userinfo">
-      <p><strong>User: </strong><?= $_SESSION['email'] ?> - <strong>Role: </strong><?= $_SESSION['rolename'] ?> </p>
-    </div>
-    <div class="clear"></div>
-    <div class="userinfo">
-        <div><a href="logout.php"><h4>Logout</h4></a></div>
-    </div>
-    <div class="clear"></div>
+    <?php include("head.php"); ?>
     <div id="header">
         <div id="header-left">
             <div><img src="img/ninja.png" alt="Florist"></div>
@@ -302,7 +295,7 @@
                         <label for="editblogtitle">Product Name</label>
                         <?php  if($errorFlag) :?>
                             <?php if(!empty($_POST['editblogtitle'])):?>
-                                <input id="editblogtitle" name="editblogtitle" type="text" value="<?= $_POST['editblogtitle'] ?>" autofocus /> 
+                                <input id="editblogtitle" name="editblogtitle" type="text" value="<?= $_POST['editblogtitle'] ?>" autofocus />
                             <?php elseif(empty($_POST['editblogtitle'])): ?>
                                 <input id="editblogtitle" name="editblogtitle" type="text" value="" autofocus />
                             <?php endif ?>
@@ -320,15 +313,15 @@
                         <label for="editblogcontent">Description</label>
                         <?php  if($errorFlag) :?>
                             <?php if(!empty($_POST['editblogcontent'])):?>
-                                <p><textarea id="editblogcontent" name="editblogcontent"><?= $_POST['editblogcontent']?></textarea></p>     
+                                <p><textarea id="editblogcontent" name="editblogcontent"><?= $_POST['editblogcontent']?></textarea></p>
                             <?php elseif(empty($_POST['editblogcontent'])): ?>
-                                <p><textarea id="editblogcontent" name="editblogcontent"></textarea></p>  
+                                <p><textarea id="editblogcontent" name="editblogcontent"></textarea></p>
                             <?php endif ?>
                         <?php else: ?>
                             <?php if($_GET): ?>
                                 <p><textarea id="editblogcontent" name="editblogcontent"><?=$description?></textarea></p>
                             <?php endif ?>
-                           
+
                             <?php if(isset($_POST['editblogcontent'])): ?>
                                 <p><textarea id="editblogcontent" name="editblogcontent"><?=$_POST['editblogcontent']?></textarea></p>
                             <?php endif ?>
@@ -338,7 +331,7 @@
                     <label for="price">Price</label>
                         <?php  if($errorFlag) :?>
                             <?php if(!empty($_POST['price']) && !filter_var($_POST['price'],FILTER_VALIDATE_FLOAT) ):?>
-                                <input id="price" name="price" type="text" value="<?= $_POST['price']?>" /> 
+                                <input id="price" name="price" type="text" value="<?= $_POST['price']?>" />
                             <?php elseif(!empty($_POST['price'])): ?>
                                 <input id="price" name="price" type="text"  value="<?= $_POST['price']?>" />
                             <?php elseif(empty($_POST['price'])): ?>

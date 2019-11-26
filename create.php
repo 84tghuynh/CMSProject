@@ -6,10 +6,10 @@
      * •	The form includes a button for submitting the post to the database.
      * •	This page is protected by HTTP authentication.
      *      Redirect to admin.php after creating blog
-     * 
+     *
      * Valiation:
      * + •	New Posts are validated to ensure the title and content are both at least 1 character in length.
-     * + •	All user submitted strings (POSTed titles and blog content) must sanitized 
+     * + •	All user submitted strings (POSTed titles and blog content) must sanitized
      *      using input_filter and inserted/updated using PDO statements with placeholders bound to values.
      * Author: Giang Truong, Huynh
      * Updated: Sep 29, 2019
@@ -19,7 +19,7 @@
     $productName='';
     $description='';
     $errorFlag = false;
-    
+
     function insertProduct()
     {
         require('connect.php');
@@ -31,7 +31,7 @@
 
         $image_filename ='';
 
-        if (image_upload_detected()) { 
+        if (image_upload_detected()) {
             $image_filename        = $_FILES['image']['name'];
             $temporary_image_path  = $_FILES['image']['tmp_name'];
             $new_image_path        = file_upload_path($image_filename);
@@ -39,11 +39,11 @@
                 resizeFile($temporary_image_path,$new_image_path);
             }
         }
-       
+
         //  Build the parameterized SQL query and bind to the above sanitized values.
         $query = "INSERT INTO products(productname,price,image,description,categoryid) values (:productname,:price,:image,:description,:categoryid)";
         $statement = $db->prepare($query);
-        
+
         //  Bind values to the parameters
         $statement->bindValue(':productname',$productName);
         $statement->bindValue(':price',$price);
@@ -89,7 +89,7 @@
         $flag = $statement->execute();
     }
 
-    session_start(); 
+    session_start();
     if(isset($_SESSION['email']))
     {
         /**
@@ -100,19 +100,19 @@
          * Process POST
         */
         if (
-                isset($_POST['createproduct'])                      && 
-                !empty($_POST['productname'])                       && 
-                strlen(trim($_POST['productname']))!=0              && 
-                strlen($_POST['productname'])>=1                    && 
-                !empty($_POST['description'])                       && 
-                strlen(trim($_POST['description']))!=0              && 
+                isset($_POST['createproduct'])                      &&
+                !empty($_POST['productname'])                       &&
+                strlen(trim($_POST['productname']))!=0              &&
+                strlen($_POST['productname'])>=1                    &&
+                !empty($_POST['description'])                       &&
+                strlen(trim($_POST['description']))!=0              &&
                 strlen($_POST['description'])>=1                    &&
                 filter_var($_POST['price'],FILTER_VALIDATE_FLOAT)   &&
                 filter_var($_POST['category'],FILTER_VALIDATE_INT)
             )
         {
             insertProduct();
-        
+
         }else{
             if(isset($_POST['createproduct']) && (empty($_POST['productname']) || strlen(trim($_POST['productname'])) == 0))   $errorFlag = true;
             if(isset($_POST['createproduct']) && (empty($_POST['description']) || strlen(trim($_POST['description'])) == 0))  $errorFlag = true;
@@ -121,7 +121,7 @@
         }
 
         /**
-         * Process loading Category to FORM Create Product  
+         * Process loading Category to FORM Create Product
          */
         require('connect.php');
         //Loading Category
@@ -132,7 +132,7 @@
         $statement = $db->prepare($query);
 
         // Execution on the DB server is delayed until we execute().
-        $statement->execute(); 
+        $statement->execute();
     }else{
         header("Location: login.php");
         exit();
@@ -148,14 +148,7 @@
     <link rel="stylesheet" href="style.css" type="text/css">
 </head>
 <body>
-    <div class="userinfo">
-      <p><strong>User: </strong><?= $_SESSION['email'] ?> - <strong>Role: </strong><?= $_SESSION['rolename'] ?> </p>
-    </div>
-    <div class="clear"></div>
-    <div class="userinfo">
-        <div><a href="logout.php"><h4>Logout</h4></a></div>
-    </div>
-    <div class="clear"></div>
+    <?php include("head.php"); ?>
     <div id="header">
         <div id="header-left">
             <div><img src="img/ninja.png" alt="Florist"></div>
@@ -168,7 +161,7 @@
     <div class="clear"></div>
     <div id="content">
         <?php  if($errorFlag) :?>
-          
+
             <?php if(empty($_POST['productname']) || strlen(trim($_POST['productname'])) ==0 ):?>
                 <p>WARNING: Please type at least one character in Product Nanme</p>
             <?php endif ?>
@@ -192,10 +185,10 @@
                 <ol>
                     <li>
                         <label for="productname">Product Name</label>
-                        
+
                         <?php  if($errorFlag) :?>
                             <?php if(!empty($_POST['productname'])):?>
-                                <input id="productname" name="productname" type="text" value="<?= $_POST['productname']?>" autofocus /> 
+                                <input id="productname" name="productname" type="text" value="<?= $_POST['productname']?>" autofocus />
                             <?php elseif(empty($_POST['productname'])): ?>
                                 <input id="productname" name="productname" type="text" autofocus />
                             <?php endif ?>
@@ -207,9 +200,9 @@
                         <label for="description">Description</label>
                         <?php  if($errorFlag) :?>
                             <?php if(!empty($_POST['description'])):?>
-                                <p><textarea id="description" name="description"><?= $_POST['description']?></textarea></p>     
+                                <p><textarea id="description" name="description"><?= $_POST['description']?></textarea></p>
                             <?php elseif(empty($_POST['description'])): ?>
-                                <p><textarea id="description" name="description"></textarea></p>  
+                                <p><textarea id="description" name="description"></textarea></p>
                             <?php endif ?>
                         <?php else: ?>
                             <p><textarea id="description" name="description"></textarea></p>
@@ -219,7 +212,7 @@
                         <label for="price">Price</label>
                         <?php  if($errorFlag) :?>
                             <?php if(!empty($_POST['price']) && !filter_var($_POST['price'],FILTER_VALIDATE_FLOAT) ):?>
-                                <input id="price" name="price" type="text" value="<?= $_POST['price']?>" /> 
+                                <input id="price" name="price" type="text" value="<?= $_POST['price']?>" />
                             <?php elseif(!empty($_POST['price'])): ?>
                                 <input id="price" name="price" type="text"  value="<?= $_POST['price']?>" />
                             <?php elseif(empty($_POST['price'])): ?>

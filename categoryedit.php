@@ -1,40 +1,40 @@
 <?php
-   
+
     /**
      * edit.php - show/update/delete
      *   Show blog before editing
      *  •	Provides a form where the user can edit a specific post title and contents.
-     *  •	The post being edited is determined by a GET parameter in the URL. 
+     *  •	The post being edited is determined by a GET parameter in the URL.
      *      This parameter should be the post's primary key id from the database table.
      *  •	The title and content of the post being edited should appear in the form.
      *  •	The form includes a button for updating the post in the database.
      *  •	The form includes a button to delete the current post from the database.
-     * 
+     *
      *  Validation
      *   •	An updated Posts are validated to ensure the title and content are both at least 1 character in length.
      *      Warning: users if title or content is empty
-     *   •	All user submitted strings (POSTed titles and blog content) must sanitized 
+     *   •	All user submitted strings (POSTed titles and blog content) must sanitized
      *      using input_filter and inserted/updated using PDO statements with placeholders bound to values.
-     *   •	Redirect 
+     *   •	Redirect
      *          + show.php after update succesfully
      *          + admin.php after delete successully
      *          + admin.php if id is not an integer when update or delete
-     * 
+     *
      *  Author: Giang Truong, Huynh
      *  Updated: Sep 29, 2019
-     * 
+     *
      */
 
-     
+
     // require('authenticate.php');
     require('upload_filter_origin.php');
-    
+
     $errorFlag = false;
     $categorydetail ='';
     $id='';
     $categoryname ='';
-  
-    session_start(); 
+
+    session_start();
     if(isset($_SESSION['email']))
     {
         //Show
@@ -61,24 +61,24 @@
         }
 
         //Update
-        if (isset($_POST['updatecategory'])                 && 
-            !empty($_POST['editcategoryname'])              && 
-            strlen(trim($_POST['editcategoryname']))!=0     && 
-            strlen($_POST['editcategoryname'])>=1              
+        if (isset($_POST['updatecategory'])                 &&
+            !empty($_POST['editcategoryname'])              &&
+            strlen(trim($_POST['editcategoryname']))!=0     &&
+            strlen($_POST['editcategoryname'])>=1
         )
         {
             require('connect.php');
             //  Sanitize user input to escape HTML entities and filter out dangerous characters.
             $categoryname = nl2br(htmlspecialchars($_POST['editcategoryname'], ENT_QUOTES, 'UTF-8'));
             $id = filter_input(INPUT_POST, 'id', FILTER_SANITIZE_NUMBER_INT);
-            
+
             $query ='';
             $statement ='';
-        
+
             $query     = "UPDATE category SET name = :name WHERE categoryId = :id";
             $statement = $db->prepare($query);
 
-            $statement->bindValue(':name', $categoryname);        
+            $statement->bindValue(':name', $categoryname);
             $statement->bindValue(':id', $id, PDO::PARAM_INT);
             //  Execute the UPDATE
             //  execute() will check for possible SQL injection and remove if necessary
@@ -95,12 +95,12 @@
                 $statement->bindValue(':changetype',2);
                 $flag = $statement->execute();
             }
-            
+
             if($flag){
                 header("Location: category.php");
                 exit();
             }
-        
+
         }elseif (isset($_POST['updatecategory']) && !filter_input(INPUT_POST, 'id', FILTER_VALIDATE_INT))
         {
             header("Location: category.php");
@@ -121,7 +121,7 @@
             $statement->bindValue(':id', $id, PDO::PARAM_INT);
             //  Execute the DELETE
             //  execute() will check for possible SQL injection and remove if necessary
-            
+
             $flag = $statement->execute();
 
             if($flag)
@@ -137,12 +137,12 @@
                 $flag = $statement->execute();
 
             }
-            
+
             if($flag){
                 header("Location: category.php");
                 exit();
             }
-        
+
         } elseif (isset($_POST['deletecategory']) && !filter_input(INPUT_POST, 'id', FILTER_VALIDATE_INT) )
         {
             header("Location: category.php");
@@ -162,14 +162,7 @@
     <script src="js/main.js" type="text/javascript"></script>
 </head>
 <body>
-    <div class="userinfo">
-      <p><strong>User: </strong><?= $_SESSION['email'] ?> - <strong>Role: </strong><?= $_SESSION['rolename'] ?> </p>
-    </div>
-    <div class="clear"></div>
-    <div class="userinfo">
-        <div><a href="logout.php"><h4>Logout</h4></a></div>
-    </div>
-    <div class="clear"></div>
+    <?php include("head.php"); ?>
     <div id="header">
         <div id="header-left">
             <div><img src="img/ninja.png" alt="Florist"></div>
@@ -202,7 +195,7 @@
                         <label for="editblogtitle">Category Name</label>
                         <?php  if($errorFlag) :?>
                             <?php if(!empty($_POST['editcategoryname'])):?>
-                                <input id="editcategoryname" name="editcategoryname" type="text" value="<?= $_POST['editcategoryname'] ?>" autofocus /> 
+                                <input id="editcategoryname" name="editcategoryname" type="text" value="<?= $_POST['editcategoryname'] ?>" autofocus />
                             <?php elseif(empty($_POST['editcategoryname'])): ?>
                                 <input id="editcategoryname" name="editcategoryname" type="text" value="" autofocus />
                             <?php endif ?>
@@ -228,6 +221,6 @@
             </div>
         </form>
     </div>
- 
+
 </body>
 </html>

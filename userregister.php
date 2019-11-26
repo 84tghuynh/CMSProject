@@ -5,12 +5,12 @@
   * Process POST
   */
   if (
-        isset($_POST['registernormaluser'])              && 
-        !empty($_POST['password'])                       && 
-        strlen(trim($_POST['password']))!=0              && 
-        strlen($_POST['password'])>=1                    && 
-        !empty($_POST['confirm'])                        && 
-        strlen(trim($_POST['confirm']))!=0               && 
+        isset($_POST['registernormaluser'])              &&
+        !empty($_POST['password'])                       &&
+        strlen(trim($_POST['password']))!=0              &&
+        strlen($_POST['password'])>=1                    &&
+        !empty($_POST['confirm'])                        &&
+        strlen(trim($_POST['confirm']))!=0               &&
         strlen($_POST['confirm'])>=1                     &&
         (validateEmail() == 'validemail' )               &&
         (matchConfirmAndPassword())                      &&
@@ -70,7 +70,7 @@
                         <?php else: ?>
                                 <input id="lastname" name="lastname" type="text" />
                         <?php endif ?>
-                        
+
                     </li>
                     <li>
                         <label for="firstname">First Name</label>
@@ -83,27 +83,27 @@
                         <?php else: ?>
                                 <input id="firstname" name="firstname" type="text" />
                         <?php endif ?>
-                       
+
                     </li>
                     <li>
 							<label for="email">Email</label>
 
                             <?php if($errorFlag): ?>
                                 <?php if(validateEmail() == "noemail"): ?>
-                                    <input id="email" name="email" type="text" /> 
+                                    <input id="email" name="email" type="text" />
                                     <p class="registerError error" id="email_error" style="display: block;">* Required field</p>
                                <?php  elseif(validateEmail() == "invalidemail"): ?>
-                                    <input id="email" name="email" type="text" value="<?= trim($_POST['email']) ?>"/> 
+                                    <input id="email" name="email" type="text" value="<?= trim($_POST['email']) ?>"/>
                                     <p class="registerError error" id="emailformat_error" style="display: block;">* Invalid email address</p>
                                 <?php  elseif(checkExistingUser(trim($_POST['email']))): ?>
-                                    <input id="email" name="email" type="text" value="<?= trim($_POST['email']) ?>"/> 
+                                    <input id="email" name="email" type="text" value="<?= trim($_POST['email']) ?>"/>
                                     <p class="registerError error" id="emailformat_error" style="display: block;">* Email address existed</p>
                                 <?php  else: ?>
-                                    <input id="email" name="email" type="text" value="<?= trim($_POST['email']) ?>"/> 
+                                    <input id="email" name="email" type="text" value="<?= trim($_POST['email']) ?>"/>
                                     <p class="registerError error" id="email_error">* Required field</p>
                                     <p class="registerError error" id="emailformat_error">* Invalid email address</p>
                                 <?php endif ?>
-                            <?php else: ?>  
+                            <?php else: ?>
                                 <input id="email" name="email" type="text" />
                                 <p class="registerError error" id="email_error">* Required field</p>
                                 <p class="registerError error" id="emailformat_error">* Invalid email address</p>
@@ -126,7 +126,7 @@
                     </li>
                     <li>
                         <label for="confirm">Confirm</label>
-                       
+
                         <?php if($errorFlag): ?>
                                 <?php  if(isset($_POST['registernormaluser']) && (empty($_POST['confirm'])  || strlen(trim($_POST['confirm'])) == 0)) : ?>
                                     <input id="confirm" name="confirm" type="password" />
@@ -139,7 +139,7 @@
                                     <p class="registerError error"  id="confirm_error" >* Required field</p>
                                     <p class="registerError error" id="confirmmatch_error" >* Not Match Password</p>
                                 <?php endif ?>
-                        <?php else: ?>   
+                        <?php else: ?>
                             <input id="confirm" name="confirm" type="password" />
                             <p class="registerError error"  id="confirm_error" >* Required field</p>
                             <p class="registerError error" id="confirmmatch_error" >* Not Match Password</p>

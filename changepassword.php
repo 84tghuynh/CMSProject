@@ -1,7 +1,7 @@
 <?php
     require('common.php');
     $errorFlag = false;
-    session_start(); 
+    session_start();
     if(isset($_SESSION['email'])&& ($_SESSION['roletype'] ==1) )
     {
         //Show
@@ -18,10 +18,10 @@
          * update
         */
         if (
-            isset($_POST['changepassword'])             && 
-            !empty($_POST['password'])              && 
-            strlen(trim($_POST['password']))!=0     && 
-            strlen($_POST['password'])>=1                                 
+            isset($_POST['changepassword'])             &&
+            !empty($_POST['password'])              &&
+            strlen(trim($_POST['password']))!=0     &&
+            strlen($_POST['password'])>=1
         )
         {
             changePassword();
@@ -44,14 +44,7 @@
     <script src="js/main.js" type="text/javascript"></script>
 </head>
 <body>
-    <div class="userinfo">
-      <p><strong>User: </strong><?= $_SESSION['email'] ?> - <strong>Role: </strong><?= $_SESSION['rolename'] ?> </p>
-    </div>
-    <div class="clear"></div>
-    <div class="userinfo">
-        <div><a href="logout.php"><h4>Logout</h4></a></div>
-    </div>
-    <div class="clear"></div>
+    <?php include("head.php"); ?>
     <div id="header">
         <div id="header-left">
             <div><img src="img/ninja.png" alt="Florist"></div>
@@ -83,7 +76,7 @@
                             <input name="id" type="hidden" value="<?=$_POST['id']?>"/>
                         <?php endif ?>
                     </li>
-                   
+
                     <li>
                         <label for="password">New Password</label>
                         <?php if($errorFlag): ?>

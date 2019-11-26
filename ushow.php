@@ -147,6 +147,7 @@
     <link rel="stylesheet" href="style.css" type="text/css">
 </head>
 <body>
+    <?php include("uhead.php"); ?>
     <div id="header">
         <div id="header-left">
             <div><img src="img/ninja.png" alt="Florist"></div>
