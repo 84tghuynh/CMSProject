@@ -3,11 +3,13 @@
 I. About Roy’s Florist
 Roy’s Florist is a fresh flower shop in Winnipeg. It is owned and operated by Mr. Alan Simpson’s family. Customers can
 buy the fresh flower by ordering online or stop by the shop.
+
 II. Existing Problems
 The owner wants to increase their online sales, so Roy’s Florist’s owner wishes the contents of the current website to be
 able to update by ourselves in a timely manner.
 At present, all contents on the website have been changed through a freelance developer who has developed this
 website. But he is not always ready to assist them.
+
 III. Solution
 After the meeting with you, I had a better understanding of your problem. And I analyzed your requirements and needs
 carefully.
