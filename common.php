@@ -344,4 +344,72 @@
 
     }
 
+    function insertProduct()
+    {
+        require('connect.php');
+        //  Sanitize user input to escape HTML entities and filter out dangerous characters.
+        $productName = filter_input(INPUT_POST, 'productname', FILTER_SANITIZE_FULL_SPECIAL_CHARS);
+        $description =  nl2br(htmlspecialchars($_POST['description'], ENT_QUOTES, 'UTF-8'));
+        $price = filter_input(INPUT_POST,'price',FILTER_SANITIZE_NUMBER_FLOAT,FILTER_FLAG_ALLOW_FRACTION);
+        $categoryId = filter_input(INPUT_POST,'category',FILTER_SANITIZE_NUMBER_INT);
+
+        $image_filename ='';
+
+        if (image_upload_detected()) {
+            $image_filename        = $_FILES['image']['name'];
+            $temporary_image_path  = $_FILES['image']['tmp_name'];
+            $new_image_path        = file_upload_path($image_filename);
+            if (file_is_an_image($temporary_image_path, $new_image_path)) {
+                resizeFile($temporary_image_path,$new_image_path);
+            }else $image_filename ='';
+        }
+
+        //  Build the parameterized SQL query and bind to the above sanitized values.
+        $query = "INSERT INTO products(productname,price,image,description,categoryid) values (:productname,:price,:image,:description,:categoryid)";
+        $statement = $db->prepare($query);
+
+        //  Bind values to the parameters
+        $statement->bindValue(':productname',$productName);
+        $statement->bindValue(':price',$price);
+        $statement->bindValue(':image',$image_filename);
+        $statement->bindValue(':description',$description);
+        $statement->bindValue(':categoryid',$categoryId);
+        //  Execute the INSERT.
+        //  execute() will check for possible SQL injection and remove if necessary
+
+        $flag = $statement->execute();
+
+        if($flag)
+        {
+
+            $query = "INSERT INTO changehistory(id,productid,name,changetype) values (:id,:productid,:name,:changetype)";
+            $statement = $db->prepare($query);
+                //  Bind values to the parameters
+            $statement->bindValue(':id',1);
+            $statement->bindValue(':productid',$db->lastInsertId());
+            $statement->bindValue(':name',"Insert");
+            $statement->bindValue(':changetype',1);
+            $flag = $statement->execute();
+
+        }
+
+        if($flag){
+            header("Location: admin.php");
+            exit();
+        }
+    }
+
+    function insertChangeHistory($id,$productid,$name,$changetype,$flag)
+    {
+        require('connect.php');
+         //  Build the parameterized SQL query and bind to the above sanitized values.
+        $query = "INSERT INTO changehistory(id,productid,name,changetype) values (:id,:productid,:name,:changetype)";
+        $statement = $db->prepare($query);
+            //  Bind values to the parameters
+        $statement->bindValue(':id',$id);
+        $statement->bindValue(':productid',$productid);
+        $statement->bindValue(':name',$name);
+        $statement->bindValue(':changetype',$changeType);
+        $flag = $statement->execute();
+    }
 ?>
