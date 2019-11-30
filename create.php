@@ -37,7 +37,7 @@
             $new_image_path        = file_upload_path($image_filename);
             if (file_is_an_image($temporary_image_path, $new_image_path)) {
                 resizeFile($temporary_image_path,$new_image_path);
-            }
+            }else $image_filename ='';
         }
 
         //  Build the parameterized SQL query and bind to the above sanitized values.
