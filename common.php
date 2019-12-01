@@ -412,7 +412,24 @@
             $image_filename        = $_FILES['image']['name'];
             $temporary_image_path  = $_FILES['image']['tmp_name'];
             $new_image_path        = file_upload_path($image_filename);
-            if (file_is_an_image($temporary_image_path, $new_image_path)) {
+            if (file_is_an_image($temporary_image_path, $new_image_path))
+            {
+                // delete old image on disk before new image uploaded
+                $query = 'SELECT image FROM products WHERE productid=:id';
+                // A PDO::Statement is prepared from the query.
+                $statement = $db->prepare($query);
+                $statement->bindValue(':id',$productid, PDO::PARAM_INT);
+                if($statement->execute())
+                {
+                    $productdetail = $statement->fetch();
+                    $image = $productdetail['image'];
+
+                    if($image != '')
+                    {
+                      deletePictureOnDisk($image);
+                    }
+                }
+                // Process the new image uploaded
                 resizeFile($temporary_image_path,$new_image_path);
             }else
             {
