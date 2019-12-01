@@ -480,7 +480,22 @@
     function deleteProduct($productid)
     {
         require('connect.php');
-        // session_start();
+
+        // delete image on disk
+        $query = 'SELECT image FROM products WHERE productid=:id';
+        // A PDO::Statement is prepared from the query.
+        $statement = $db->prepare($query);
+        $statement->bindValue(':id',$productid, PDO::PARAM_INT);
+        if($statement->execute())
+        {
+            $productdetail = $statement->fetch();
+            $image = $productdetail['image'];
+
+            if($image != '')
+            {
+              deletePictureOnDisk($image);
+            }
+        }
         //  Build the parameterized SQL query and bind to the above sanitized values.
         $query     = "DELETE FROM products WHERE productid = :id";
         $statement = $db->prepare($query);
