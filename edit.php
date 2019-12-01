@@ -187,33 +187,11 @@
             // require('connect.php');
             $id = filter_input(INPUT_POST, 'id', FILTER_SANITIZE_NUMBER_INT);
 
-            //  Build the parameterized SQL query and bind to the above sanitized values.
-            $query     = "DELETE FROM products WHERE productid = :id";
-            $statement = $db->prepare($query);
-            $statement->bindValue(':id', $id, PDO::PARAM_INT);
-            //  Execute the DELETE
-            //  execute() will check for possible SQL injection and remove if necessary
+            if(isset($_POST['delpic']))
+                deletePicture($id);
+            else
+                deleteProduct($id);
 
-            $flag = $statement->execute();
-
-            if($flag)
-            {
-
-                $query = "INSERT INTO changehistory(id,productid,name,changetype) values (:id,:productid,:name,:changetype)";
-                $statement = $db->prepare($query);
-                    //  Bind values to the parameters
-                $statement->bindValue(':id',1);
-                $statement->bindValue(':productid',$id);
-                $statement->bindValue(':name',"Delete");
-                $statement->bindValue(':changetype',3);
-                $flag = $statement->execute();
-
-            }
-
-            if($flag){
-                header("Location: admin.php");
-                exit();
-            }
 
         } elseif (isset($_POST['deleteblog']) && !filter_input(INPUT_POST, 'id', FILTER_VALIDATE_INT) )
         {
@@ -360,7 +338,7 @@
             </div>
             <?php  if($image != ''): ?>
                 <div>
-                  <input type="checkbox" name="delpic" value="<?= $image ?>"> Delete Picture (Check & Click Delete)
+                  <input type="checkbox" name="delpic"> Delete Picture (Check & Click Delete)
                 </div>
                 <div class='medium'>
                     <img src= "<?='uploads/'.$filename.'_medium.'.$ext  ?>" alt="<?= $filename.'_medium.'.$ext ?>" />
