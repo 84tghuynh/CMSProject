@@ -1,36 +1,6 @@
 <?php
 
-     /**
-    *   Does validate an email address
-    * 	return  "noemail" : email does not provide
-    *      "invalidemail" : email is invalid
-    *        "validemail" : email is valid
-    *
-    */
-    function validateEmail()
-    {
-        // Validate Email Addess
-        // http://emailregex.com
-        $patternEmail ='/^(?!(?:(?:\x22?\x5C[\x00-\x7E]\x22?)|(?:\x22?[^\x5C\x22]\x22?)){255,})(?!(?:(?:\x22?\x5C[\x00-\x7E]\x22?)|(?:\x22?[^\x5C\x22]\x22?)){65,}@)(?:(?:[\x21\x23-\x27\x2A\x2B\x2D\x2F-\x39\x3D\x3F\x5E-\x7E]+)|(?:\x22(?:[\x01-\x08\x0B\x0C\x0E-\x1F\x21\x23-\x5B\x5D-\x7F]|(?:\x5C[\x00-\x7F]))*\x22))(?:\.(?:(?:[\x21\x23-\x27\x2A\x2B\x2D\x2F-\x39\x3D\x3F\x5E-\x7E]+)|(?:\x22(?:[\x01-\x08\x0B\x0C\x0E-\x1F\x21\x23-\x5B\x5D-\x7F]|(?:\x5C[\x00-\x7F]))*\x22)))*@(?:(?:(?!.*[^.]{64,})(?:(?:(?:xn--)?[a-z0-9]+(?:-[a-z0-9]+)*\.){1,126}){1,}(?:(?:[a-z][a-z0-9]*)|(?:(?:xn--)[a-z0-9]+))(?:-[a-z0-9]+)*)|(?:\[(?:(?:IPv6:(?:(?:[a-f0-9]{1,4}(?::[a-f0-9]{1,4}){7})|(?:(?!(?:.*[a-f0-9][:\]]){7,})(?:[a-f0-9]{1,4}(?::[a-f0-9]{1,4}){0,5})?::(?:[a-f0-9]{1,4}(?::[a-f0-9]{1,4}){0,5})?)))|(?:(?:IPv6:(?:(?:[a-f0-9]{1,4}(?::[a-f0-9]{1,4}){5}:)|(?:(?!(?:.*[a-f0-9]:){5,})(?:[a-f0-9]{1,4}(?::[a-f0-9]{1,4}){0,3})?::(?:[a-f0-9]{1,4}(?::[a-f0-9]{1,4}){0,3}:)?)))?(?:(?:25[0-5])|(?:2[0-4][0-9])|(?:1[0-9]{2})|(?:[1-9]?[0-9]))(?:\.(?:(?:25[0-5])|(?:2[0-4][0-9])|(?:1[0-9]{2})|(?:[1-9]?[0-9]))){3}))\]))$/iD';
 
-        if(!isset($_POST['email']))
-        {
-            return "noemail";
-        }
-        else{
-            if(empty($_POST['email']))
-            {
-                return "noemail";
-            }
-            else{
-                    if(preg_match($patternEmail,trim($_POST['email'])))
-                    {
-                        return "validemail";
-                    }
-                    else return "invalidemail";
-                }
-        }
-    }
 
     function matchConfirmAndPassword()
     {
@@ -344,7 +314,11 @@
 
     }
 
-    function insertProduct()
+    /**
+     * $errorFlagForPic = false : no file uploaded or file uploaded is an image
+     * $errorFlagForPic = true:  file uploaded is not an image. Nothing happens
+    */
+    function insertProduct(&$errorFlagForPic)
     {
         require('connect.php');
         //  Sanitize user input to escape HTML entities and filter out dangerous characters.
@@ -361,41 +335,48 @@
             $new_image_path        = file_upload_path($image_filename);
             if (file_is_an_image($temporary_image_path, $new_image_path)) {
                 resizeFile($temporary_image_path,$new_image_path);
-            }else $image_filename ='';
+            }else
+            {
+              $image_filename ='';
+              $errorFlagForPic = true;
+            }
         }
 
-        //  Build the parameterized SQL query and bind to the above sanitized values.
-        $query = "INSERT INTO products(productname,price,image,description,categoryid) values (:productname,:price,:image,:description,:categoryid)";
-        $statement = $db->prepare($query);
-
-        //  Bind values to the parameters
-        $statement->bindValue(':productname',$productName);
-        $statement->bindValue(':price',$price);
-        $statement->bindValue(':image',$image_filename);
-        $statement->bindValue(':description',$description);
-        $statement->bindValue(':categoryid',$categoryId);
-        //  Execute the INSERT.
-        //  execute() will check for possible SQL injection and remove if necessary
-
-        $flag = $statement->execute();
-
-        if($flag)
+        if($errorFlagForPic == false)
         {
-
-            $query = "INSERT INTO changehistory(id,productid,name,changetype) values (:id,:productid,:name,:changetype)";
+            //  Build the parameterized SQL query and bind to the above sanitized values.
+            $query = "INSERT INTO products(productname,price,image,description,categoryid) values (:productname,:price,:image,:description,:categoryid)";
             $statement = $db->prepare($query);
-                //  Bind values to the parameters
-            $statement->bindValue(':id',1);
-            $statement->bindValue(':productid',$db->lastInsertId());
-            $statement->bindValue(':name',"Insert");
-            $statement->bindValue(':changetype',1);
+
+            //  Bind values to the parameters
+            $statement->bindValue(':productname',$productName);
+            $statement->bindValue(':price',$price);
+            $statement->bindValue(':image',$image_filename);
+            $statement->bindValue(':description',$description);
+            $statement->bindValue(':categoryid',$categoryId);
+            //  Execute the INSERT.
+            //  execute() will check for possible SQL injection and remove if necessary
+
             $flag = $statement->execute();
 
-        }
+            if($flag)
+            {
 
-        if($flag){
-            header("Location: admin.php");
-            exit();
+                $query = "INSERT INTO changehistory(id,productid,name,changetype) values (:id,:productid,:name,:changetype)";
+                $statement = $db->prepare($query);
+                    //  Bind values to the parameters
+                $statement->bindValue(':id',1);
+                $statement->bindValue(':productid',$db->lastInsertId());
+                $statement->bindValue(':name',"Insert");
+                $statement->bindValue(':changetype',1);
+                $flag = $statement->execute();
+
+            }
+
+            if($flag){
+                header("Location: admin.php");
+                exit();
+            }
         }
     }
 
@@ -412,4 +393,36 @@
         $statement->bindValue(':changetype',$changeType);
         $flag = $statement->execute();
     }
+
+    /**
+   *   Does validate an email address
+   * 	return  "noemail" : email does not provide
+   *      "invalidemail" : email is invalid
+   *        "validemail" : email is valid
+   *
+   */
+   function validateEmail()
+   {
+       // Validate Email Addess
+       // http://emailregex.com
+       $patternEmail ='/^(?!(?:(?:\x22?\x5C[\x00-\x7E]\x22?)|(?:\x22?[^\x5C\x22]\x22?)){255,})(?!(?:(?:\x22?\x5C[\x00-\x7E]\x22?)|(?:\x22?[^\x5C\x22]\x22?)){65,}@)(?:(?:[\x21\x23-\x27\x2A\x2B\x2D\x2F-\x39\x3D\x3F\x5E-\x7E]+)|(?:\x22(?:[\x01-\x08\x0B\x0C\x0E-\x1F\x21\x23-\x5B\x5D-\x7F]|(?:\x5C[\x00-\x7F]))*\x22))(?:\.(?:(?:[\x21\x23-\x27\x2A\x2B\x2D\x2F-\x39\x3D\x3F\x5E-\x7E]+)|(?:\x22(?:[\x01-\x08\x0B\x0C\x0E-\x1F\x21\x23-\x5B\x5D-\x7F]|(?:\x5C[\x00-\x7F]))*\x22)))*@(?:(?:(?!.*[^.]{64,})(?:(?:(?:xn--)?[a-z0-9]+(?:-[a-z0-9]+)*\.){1,126}){1,}(?:(?:[a-z][a-z0-9]*)|(?:(?:xn--)[a-z0-9]+))(?:-[a-z0-9]+)*)|(?:\[(?:(?:IPv6:(?:(?:[a-f0-9]{1,4}(?::[a-f0-9]{1,4}){7})|(?:(?!(?:.*[a-f0-9][:\]]){7,})(?:[a-f0-9]{1,4}(?::[a-f0-9]{1,4}){0,5})?::(?:[a-f0-9]{1,4}(?::[a-f0-9]{1,4}){0,5})?)))|(?:(?:IPv6:(?:(?:[a-f0-9]{1,4}(?::[a-f0-9]{1,4}){5}:)|(?:(?!(?:.*[a-f0-9]:){5,})(?:[a-f0-9]{1,4}(?::[a-f0-9]{1,4}){0,3})?::(?:[a-f0-9]{1,4}(?::[a-f0-9]{1,4}){0,3}:)?)))?(?:(?:25[0-5])|(?:2[0-4][0-9])|(?:1[0-9]{2})|(?:[1-9]?[0-9]))(?:\.(?:(?:25[0-5])|(?:2[0-4][0-9])|(?:1[0-9]{2})|(?:[1-9]?[0-9]))){3}))\]))$/iD';
+
+       if(!isset($_POST['email']))
+       {
+           return "noemail";
+       }
+       else{
+           if(empty($_POST['email']))
+           {
+               return "noemail";
+           }
+           else{
+                   if(preg_match($patternEmail,trim($_POST['email'])))
+                   {
+                       return "validemail";
+                   }
+                   else return "invalidemail";
+               }
+       }
+   }
 ?>

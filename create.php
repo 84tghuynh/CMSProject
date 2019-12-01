@@ -20,6 +20,7 @@
     $productName='';
     $description='';
     $errorFlag = false;
+    $errorFlagForPic = false;
 
     session_start();
     if(isset($_SESSION['email']))
@@ -43,7 +44,7 @@
                 filter_var($_POST['category'],FILTER_VALIDATE_INT)
             )
         {
-            insertProduct();
+            insertProduct($errorFlagForPic);
 
         }else{
             if(isset($_POST['createproduct']) && (empty($_POST['productname']) || strlen(trim($_POST['productname'])) == 0))   $errorFlag = true;
@@ -93,19 +94,19 @@
         <?php  if($errorFlag) :?>
 
             <?php if(empty($_POST['productname']) || strlen(trim($_POST['productname'])) ==0 ):?>
-                <p>WARNING: Please type at least one character in Product Nanme</p>
+                <p class='warning'>WARNING: Please type at least one character in Product Nanme</p>
             <?php endif ?>
 
             <?php if(empty($_POST['description']) ||  strlen(trim($_POST['description']))==0):?>
-                <p>WARNING: Please type at least one character in Description</p>
+                <p class='warning'>WARNING: Please type at least one character in Description</p>
             <?php endif ?>
 
             <?php if(empty($_POST['price']) ||  !filter_var($_POST['price'],FILTER_VALIDATE_FLOAT)):?>
-                <p>WARNING: Please enter price as a number </p>
+                <p class='warning'>WARNING: Please enter price as a number </p>
             <?php endif ?>
 
             <?php if(!filter_var($_POST['category'],FILTER_VALIDATE_INT)):?>
-                <p>WARNING: Please choose a category </p>
+                <p class='warning'>WARNING: Please choose a category </p>
             <?php endif ?>
 
         <?php endif ?>
@@ -115,7 +116,6 @@
                 <ol>
                     <li>
                         <label for="productname">Product Name</label>
-
                         <?php  if($errorFlag) :?>
                             <?php if(!empty($_POST['productname'])):?>
                                 <input id="productname" name="productname" type="text" value="<?= $_POST['productname']?>" autofocus />
@@ -123,7 +123,13 @@
                                 <input id="productname" name="productname" type="text" autofocus />
                             <?php endif ?>
                         <?php else: ?>
-                            <input id="productname" name="productname" type="text" autofocus />
+                              <?php  if($errorFlagForPic) :?>
+                                  <?php if(!empty($_POST['productname'])):?>
+                                      <input id="productname" name="productname" type="text" value="<?= $_POST['productname']?>" autofocus />
+                                  <?php endif ?>
+                              <?php else: ?>
+                                    <input id="productname" name="productname" type="text" autofocus />
+                              <?php endif ?>
                         <?php endif ?>
                     </li>
                     <li>
@@ -135,7 +141,13 @@
                                 <p><textarea id="description" name="description"></textarea></p>
                             <?php endif ?>
                         <?php else: ?>
-                            <p><textarea id="description" name="description"></textarea></p>
+                              <?php  if($errorFlagForPic) :?>
+                                <?php if(!empty($_POST['description'])):?>
+                                    <p><textarea id="description" name="description"><?= $_POST['description']?></textarea></p>
+                                <?php endif ?>
+                              <?php else: ?>
+                                    <p><textarea id="description" name="description"></textarea></p>
+                              <?php endif ?>
                         <?php endif ?>
                     </li>
                     <li>
@@ -149,10 +161,19 @@
                                 <input id="price" name="price" type="text" />
                             <?php endif ?>
                         <?php else: ?>
-                            <input id="price" name="price" type="text"  />
+                            <?php  if($errorFlagForPic) :?>
+                              <?php if(!empty($_POST['price'])):?>
+                                  <input id="price" name="price" type="text"  value="<?= $_POST['price']?>" />
+                              <?php endif ?>
+                            <?php else: ?>
+                                  <input id="price" name="price" type="text"  />
+                            <?php endif ?>
                         <?php endif ?>
                     </li>
                     <li>
+                      <?php if($errorFlagForPic == true):?>
+                          <p class='warning'>WARNING: the file uploaded is not an image </p>
+                      <?php endif ?>
                         <label for='image'>Image Filename:</label>
                         <input type='file' name='image' id='image'>
                     </li>
