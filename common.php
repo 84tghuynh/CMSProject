@@ -391,7 +391,7 @@
         $statement->bindValue(':id',$id);
         $statement->bindValue(':productid',$productid);
         $statement->bindValue(':name',$name);
-        $statement->bindValue(':changetype',$changeType);
+        $statement->bindValue(':changetype',$changetype);
         $flag = $statement->execute();
     }
 
@@ -402,7 +402,7 @@
         //  Sanitize user input to escape HTML entities and filter out dangerous characters.
         $productname = nl2br(htmlspecialchars($_POST['editblogtitle'], ENT_QUOTES, 'UTF-8'));
         $description = nl2br(htmlspecialchars($_POST['editblogcontent'], ENT_QUOTES, 'UTF-8'));
-        $id = filter_input(INPUT_POST, 'id', FILTER_SANITIZE_NUMBER_INT);
+        $productid = filter_input(INPUT_POST, 'id', FILTER_SANITIZE_NUMBER_INT);
         $price = filter_input(INPUT_POST,'price',FILTER_SANITIZE_NUMBER_FLOAT,FILTER_FLAG_ALLOW_FRACTION);
         $categoryId = filter_input(INPUT_POST,'category',FILTER_SANITIZE_NUMBER_INT);
 
@@ -437,11 +437,9 @@
                 $statement->bindValue(':image',$image_filename);
             }
 
-
-
             $statement->bindValue(':productname', $productname);
             $statement->bindValue(':description', $description);
-            $statement->bindValue(':id', $id, PDO::PARAM_INT);
+            $statement->bindValue(':id', $productid, PDO::PARAM_INT);
             $statement->bindValue(':price',$price);
             $statement->bindValue(':categoryid',$categoryId);
             //  Execute the UPDATE
@@ -451,20 +449,11 @@
 
             if($flag)
             {
-
-                $query = "INSERT INTO changehistory(id,productid,name,changetype) values (:id,:productid,:name,:changetype)";
-                $statement = $db->prepare($query);
-                    //  Bind values to the parameters
-                $statement->bindValue(':id',$_SESSION['id']);
-                $statement->bindValue(':productid',$id);
-                $statement->bindValue(':name',"Update");
-                $statement->bindValue(':changetype',2);
-                $flag = $statement->execute();
-
+                 insertChangeHistory($_SESSION['id'],$productid,"Update",2,$flag);
             }
 
             if($flag){
-                header("Location: show.php?id={$id}");
+                header("Location: show.php?id={$productid}");
                 exit();
             }
         }
@@ -474,7 +463,7 @@
     function deleteProduct($productid)
     {
         require('connect.php');
-        session_start();
+        // session_start();
         //  Build the parameterized SQL query and bind to the above sanitized values.
         $query     = "DELETE FROM products WHERE productid = :id";
         $statement = $db->prepare($query);
@@ -487,14 +476,6 @@
         if($flag)
         {
             insertChangeHistory($_SESSION['id'],$productid,'Delete',3,$flag);
-            // $query = "INSERT INTO changehistory(id,productid,name,changetype) values (:id,:productid,:name,:changetype)";
-            // $statement = $db->prepare($query);
-            //     //  Bind values to the parameters
-            // $statement->bindValue(':id',1);
-            // $statement->bindValue(':productid',$id);
-            // $statement->bindValue(':name',"Delete");
-            // $statement->bindValue(':changetype',3);
-            // $flag = $statement->execute();
         }
 
         if($flag){
@@ -506,30 +487,62 @@
     function deletePicture($productid)
     {
         require('connect.php');
-        session_start();
-        //  Build the parameterized SQL query and bind to the above sanitized values.
-        $query     = "UPDATE products SET image=:image WHERE productid = :id";
-        $statement = $db->prepare($query);
-        $statement->bindValue(':id', $productid, PDO::PARAM_INT);
-        $statement->bindValue(':image','');
-        //  Execute the DELETE
-        //  execute() will check for possible SQL injection and remove if necessary
+        try {
 
-        $flag = $statement->execute();
+              $query = 'SELECT image FROM products WHERE productid=:id';
+              // A PDO::Statement is prepared from the query.
+              $statement = $db->prepare($query);
+              $statement->bindValue(':id',$productid, PDO::PARAM_INT);
+              if($statement->execute()){
+                  $productdetail = $statement->fetch();
+                  $image = $productdetail['image'];
 
-        if($flag)
-        {
-            insertChangeHistory($_SESSION['id'],$productid,'Update',2,$flag);
-            // $query = "INSERT INTO changehistory(id,productid,name,changetype) values (:id,:productid,:name,:changetype)";
-            // $statement = $db->prepare($query);
-            //     //  Bind values to the parameters
-            // $statement->bindValue(':id',$_SESSION['id']);
-            // $statement->bindValue(':productid',$id);
-            // $statement->bindValue(':name',"Update");
-            // $statement->bindValue(':changetype',2);
-            // $flag = $statement->execute();
+                  if($image != '')
+                  {
+                    deletePictureOnDisk($image);
+                  }
+              }
+              //  Build the parameterized SQL query and bind to the above sanitized values.
+              $query     = "UPDATE products SET image=:image WHERE productid = :id";
+              $statement = $db->prepare($query);
+              $statement->bindValue(':id', $productid, PDO::PARAM_INT);
+              $statement->bindValue(':image','');
+              //  Execute the DELETE
+              //  execute() will check for possible SQL injection and remove if necessary
+              $flag = $statement->execute();
+
+              if($flag)
+              {
+                  insertChangeHistory($_SESSION['id'],$productid,'deletePic',2,$flag);
+              }
+
+              if($flag){
+                  header("Location: edit.php?id={$productid}");
+                  exit();
+              }
+
+        } catch (Exception $e) {
+            echo 'Delete Picture: ',  $e->getMessage(), "\n";
         }
+    }
 
+    function deletePictureOnDisk($image)
+    {
+      try
+      {
+          $len = strlen($image);
+          $filename = substr($image,0, $len-4);
+          $ext = substr($image,$len-3,);
+
+          unlink(file_upload_path($image));
+          unlink(file_upload_path($filename.'_medium.'.$ext));
+          unlink(file_upload_path($filename.'_standard.'.$ext));
+          unlink(file_upload_path($filename.'_deluxe.'.$ext));
+          unlink(file_upload_path($filename.'_premium.'.$ext));
+
+      } catch (Exception $e) {
+          echo 'Delete Picture: ',  $e->getMessage(), "\n";
+      }
     }
     /**
    *   Does validate an email address
