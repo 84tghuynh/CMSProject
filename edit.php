@@ -28,6 +28,7 @@
 
    // require('authenticate.php');
     require('upload_filter_origin.php');
+    require('common.php');
     require('connect.php');
 
     $errorFlag = false;
@@ -40,6 +41,7 @@
     $ext ='';
     $description ='';
     $categoryid ='';
+    $errorFlagForPic = false;
 
     session_start();
     if(isset($_SESSION['email']))
@@ -64,9 +66,7 @@
                 $description =  strip_tags($productdetail['description'],'<br />');
                 $price = $productdetail['price'];
                 $categoryid = $productdetail['categoryId'];
-            // $created = $productdetail['created'];
-
-            $image = $productdetail['image'];
+                $image = $productdetail['image'];
 
                 if($image != '')
                 {
@@ -80,10 +80,8 @@
             //Loading Category
             // SQL is written as a String.
             $query = 'SELECT * FROM category ORDER BY created DESC';
-
             // A PDO::Statement is prepared from the query.
             $stm_category = $db->prepare($query);
-
             // Execution on the DB server is delayed until we execute().
             $stm_category->execute();
 
@@ -106,70 +104,39 @@
 
         )
         {
-            // require('connect.php');
-            //  Sanitize user input to escape HTML entities and filter out dangerous characters.
-            $productname = nl2br(htmlspecialchars($_POST['editblogtitle'], ENT_QUOTES, 'UTF-8'));
-            $description = nl2br(htmlspecialchars($_POST['editblogcontent'], ENT_QUOTES, 'UTF-8'));
-            $id = filter_input(INPUT_POST, 'id', FILTER_SANITIZE_NUMBER_INT);
-            $price = filter_input(INPUT_POST,'price',FILTER_SANITIZE_NUMBER_FLOAT,FILTER_FLAG_ALLOW_FRACTION);
-            $categoryId = filter_input(INPUT_POST,'category',FILTER_SANITIZE_NUMBER_INT);
+            updateProduct($errorFlagForPic);
 
-            $image_filename ='';
+            // Picture is not an image
+            // Select product to get image & category to display again (POST)
+            if($errorFlagForPic == true){
 
-            if (image_upload_detected()) {
-                $image_filename        = $_FILES['image']['name'];
-                $temporary_image_path  = $_FILES['image']['tmp_name'];
-                $new_image_path        = file_upload_path($image_filename);
-                if (file_is_an_image($temporary_image_path, $new_image_path)) {
-                    resizeFile($temporary_image_path,$new_image_path);
+                $query = 'SELECT * FROM category ORDER BY created DESC';
+                // A PDO::Statement is prepared from the query.
+                $stm_category = $db->prepare($query);
+                // Execution on the DB server is delayed until we execute().
+                $stm_category->execute();
+
+                $id = filter_input(INPUT_POST, 'id', FILTER_SANITIZE_NUMBER_INT);
+                $query = 'SELECT categoryId, image FROM products WHERE productid=:id';
+
+                // A PDO::Statement is prepared from the query.
+                $statement = $db->prepare($query);
+                $statement->bindValue(':id',$id, PDO::PARAM_INT);
+
+                // Execution on the DB server is delayed until we execute().
+                if($statement->execute()){
+                    $productdetail = $statement->fetch();
+                    $categoryid = $productdetail['categoryId'];
+                    $image = $productdetail['image'];
+
+                    if($image != '')
+                    {
+                        $len = strlen($image);
+                        $filename = substr($image,0, $len-4);
+                        $ext = substr($image,$len-3,);
+                    }
                 }
             }
-
-            $query ='';
-            $statement ='';
-
-            if($image_filename ==''){
-                //  Build the parameterized SQL query and bind to the above sanitized values.
-                $query     = "UPDATE products SET productName = :productname, description = :description, price= :price, categoryId= :categoryid WHERE productId = :id";
-                $statement = $db->prepare($query);
-            }else{
-
-                $query     = "UPDATE products SET productName = :productname, description = :description, image= :image, price= :price, categoryId= :categoryid WHERE productId = :id";
-                $statement = $db->prepare($query);
-                $statement->bindValue(':image',$image_filename);
-            }
-
-
-
-            $statement->bindValue(':productname', $productname);
-            $statement->bindValue(':description', $description);
-            $statement->bindValue(':id', $id, PDO::PARAM_INT);
-            $statement->bindValue(':price',$price);
-            $statement->bindValue(':categoryid',$categoryId);
-            //  Execute the UPDATE
-            //  execute() will check for possible SQL injection and remove if necessary
-
-            $flag = $statement->execute();
-
-            if($flag)
-            {
-
-                $query = "INSERT INTO changehistory(id,productid,name,changetype) values (:id,:productid,:name,:changetype)";
-                $statement = $db->prepare($query);
-                    //  Bind values to the parameters
-                $statement->bindValue(':id',1);
-                $statement->bindValue(':productid',$id);
-                $statement->bindValue(':name',"Update");
-                $statement->bindValue(':changetype',2);
-                $flag = $statement->execute();
-
-            }
-
-            if($flag){
-                header("Location: show.php?id={$id}");
-                exit();
-            }
-
         }elseif (isset($_POST['updateblog']) && !filter_input(INPUT_POST, 'id', FILTER_VALIDATE_INT))
         {
             header("Location: admin.php");
@@ -181,16 +148,37 @@
             if(isset($_POST['updateblog']) && !filter_var($_POST['category'],FILTER_VALIDATE_INT))  $errorFlag = true;
 
             if(isset($_POST['updateblog']) && filter_var($_POST['category'],FILTER_VALIDATE_INT))
-                                                $categoryid = filter_input(INPUT_POST,'category',FILTER_SANITIZE_NUMBER_INT);
+                $categoryid = filter_input(INPUT_POST,'category',FILTER_SANITIZE_NUMBER_INT);
 
-            // require('connect.php');
-            $query = 'SELECT * FROM category ORDER BY created DESC';
 
-            // A PDO::Statement is prepared from the query.
-            $stm_category = $db->prepare($query);
+            if($errorFlag == true){
+                  $query = 'SELECT * FROM category ORDER BY created DESC';
+                  // A PDO::Statement is prepared from the query.
+                  $stm_category = $db->prepare($query);
+                  // Execution on the DB server is delayed until we execute().
+                  $stm_category->execute();
 
-            // Execution on the DB server is delayed until we execute().
-            $stm_category->execute();
+                  $id = filter_input(INPUT_POST, 'id', FILTER_SANITIZE_NUMBER_INT);
+                  $query = 'SELECT categoryId, image FROM products WHERE productid=:id';
+
+                  // A PDO::Statement is prepared from the query.
+                  $statement = $db->prepare($query);
+                  $statement->bindValue(':id',$id, PDO::PARAM_INT);
+
+                  // Execution on the DB server is delayed until we execute().
+                  if($statement->execute()){
+                      $productdetail = $statement->fetch();
+                      $categoryid = $productdetail['categoryId'];
+                      $image = $productdetail['image'];
+
+                      if($image != '')
+                      {
+                          $len = strlen($image);
+                          $filename = substr($image,0, $len-4);
+                          $ext = substr($image,$len-3,);
+                      }
+                  }
+            }
         }
 
         //Delete
@@ -260,22 +248,21 @@
     </div>
     <div class="clear"></div>
     <div id="content">
-
         <?php  if($errorFlag) :?>
             <?php if(empty($_POST['editblogtitle']) || strlen(trim($_POST['editblogtitle'])) ==0  ):?>
-                <p>WARNING: Please type at least one character in Product name</p>
+                <p  class='warning'>WARNING: Please type at least one character in Product name</p>
             <?php endif ?>
 
             <?php if(empty($_POST['editblogcontent']) || strlen(trim($_POST['editblogcontent'])) ==0 ):?>
-                <p>WARNING: Please type at least one character in Description</p>
+                <p  class='warning'>WARNING: Please type at least one character in Description</p>
             <?php endif ?>
 
             <?php if(empty($_POST['price']) ||  !filter_var($_POST['price'],FILTER_VALIDATE_FLOAT)):?>
-                <p>WARNING: Please enter price as a number </p>
+                <p  class='warning'>WARNING: Please enter price as a number </p>
             <?php endif ?>
 
             <?php if(!filter_var($_POST['category'],FILTER_VALIDATE_INT)):?>
-                <p>WARNING: Please choose a category </p>
+                <p  class='warning'>WARNING: Please choose a category </p>
             <?php endif ?>
 
         <?php endif ?>
@@ -349,6 +336,9 @@
                         <?php endif ?>
                     </li>
                     <li>
+                      <?php if($errorFlagForPic == true):?>
+                          <p class='warning'>WARNING: the file uploaded is not an image </p>
+                      <?php endif ?>
                         <label for='image'>Image Filename:</label>
                         <input type='file' name='image' id='image'>
                     </li>
@@ -369,6 +359,9 @@
                 </ol>
             </div>
             <?php  if($image != ''): ?>
+                <div>
+                  <input type="checkbox" name="delpic" value="<?= $image ?>"> Delete Picture (Check & Click Delete)
+                </div>
                 <div class='medium'>
                     <img src= "<?='uploads/'.$filename.'_medium.'.$ext  ?>" alt="<?= $filename.'_medium.'.$ext ?>" />
                 </div>

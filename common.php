@@ -394,6 +394,82 @@
         $flag = $statement->execute();
     }
 
+
+    function updateProduct(&$errorFlagForPic)
+    {
+        require('connect.php');
+        //  Sanitize user input to escape HTML entities and filter out dangerous characters.
+        $productname = nl2br(htmlspecialchars($_POST['editblogtitle'], ENT_QUOTES, 'UTF-8'));
+        $description = nl2br(htmlspecialchars($_POST['editblogcontent'], ENT_QUOTES, 'UTF-8'));
+        $id = filter_input(INPUT_POST, 'id', FILTER_SANITIZE_NUMBER_INT);
+        $price = filter_input(INPUT_POST,'price',FILTER_SANITIZE_NUMBER_FLOAT,FILTER_FLAG_ALLOW_FRACTION);
+        $categoryId = filter_input(INPUT_POST,'category',FILTER_SANITIZE_NUMBER_INT);
+
+        $image_filename ='';
+
+        if (image_upload_detected()) {
+            $image_filename        = $_FILES['image']['name'];
+            $temporary_image_path  = $_FILES['image']['tmp_name'];
+            $new_image_path        = file_upload_path($image_filename);
+            if (file_is_an_image($temporary_image_path, $new_image_path)) {
+                resizeFile($temporary_image_path,$new_image_path);
+            }else
+            {
+              $image_filename ='';
+              $errorFlagForPic = true;
+            }
+        }
+
+        if($errorFlagForPic == false)
+        {
+            $query ='';
+            $statement ='';
+
+            if($image_filename ==''){
+                //  Build the parameterized SQL query and bind to the above sanitized values.
+                $query     = "UPDATE products SET productName = :productname, description = :description, price= :price, categoryId= :categoryid WHERE productId = :id";
+                $statement = $db->prepare($query);
+            }else{
+
+                $query     = "UPDATE products SET productName = :productname, description = :description, image= :image, price= :price, categoryId= :categoryid WHERE productId = :id";
+                $statement = $db->prepare($query);
+                $statement->bindValue(':image',$image_filename);
+            }
+
+
+
+            $statement->bindValue(':productname', $productname);
+            $statement->bindValue(':description', $description);
+            $statement->bindValue(':id', $id, PDO::PARAM_INT);
+            $statement->bindValue(':price',$price);
+            $statement->bindValue(':categoryid',$categoryId);
+            //  Execute the UPDATE
+            //  execute() will check for possible SQL injection and remove if necessary
+
+            $flag = $statement->execute();
+
+            if($flag)
+            {
+
+                $query = "INSERT INTO changehistory(id,productid,name,changetype) values (:id,:productid,:name,:changetype)";
+                $statement = $db->prepare($query);
+                    //  Bind values to the parameters
+                $statement->bindValue(':id',1);
+                $statement->bindValue(':productid',$id);
+                $statement->bindValue(':name',"Update");
+                $statement->bindValue(':changetype',2);
+                $flag = $statement->execute();
+
+            }
+
+            if($flag){
+                header("Location: show.php?id={$id}");
+                exit();
+            }
+        }
+
+    }
+
     /**
    *   Does validate an email address
    * 	return  "noemail" : email does not provide
@@ -405,7 +481,8 @@
    {
        // Validate Email Addess
        // http://emailregex.com
-       $patternEmail ='/^(?!(?:(?:\x22?\x5C[\x00-\x7E]\x22?)|(?:\x22?[^\x5C\x22]\x22?)){255,})(?!(?:(?:\x22?\x5C[\x00-\x7E]\x22?)|(?:\x22?[^\x5C\x22]\x22?)){65,}@)(?:(?:[\x21\x23-\x27\x2A\x2B\x2D\x2F-\x39\x3D\x3F\x5E-\x7E]+)|(?:\x22(?:[\x01-\x08\x0B\x0C\x0E-\x1F\x21\x23-\x5B\x5D-\x7F]|(?:\x5C[\x00-\x7F]))*\x22))(?:\.(?:(?:[\x21\x23-\x27\x2A\x2B\x2D\x2F-\x39\x3D\x3F\x5E-\x7E]+)|(?:\x22(?:[\x01-\x08\x0B\x0C\x0E-\x1F\x21\x23-\x5B\x5D-\x7F]|(?:\x5C[\x00-\x7F]))*\x22)))*@(?:(?:(?!.*[^.]{64,})(?:(?:(?:xn--)?[a-z0-9]+(?:-[a-z0-9]+)*\.){1,126}){1,}(?:(?:[a-z][a-z0-9]*)|(?:(?:xn--)[a-z0-9]+))(?:-[a-z0-9]+)*)|(?:\[(?:(?:IPv6:(?:(?:[a-f0-9]{1,4}(?::[a-f0-9]{1,4}){7})|(?:(?!(?:.*[a-f0-9][:\]]){7,})(?:[a-f0-9]{1,4}(?::[a-f0-9]{1,4}){0,5})?::(?:[a-f0-9]{1,4}(?::[a-f0-9]{1,4}){0,5})?)))|(?:(?:IPv6:(?:(?:[a-f0-9]{1,4}(?::[a-f0-9]{1,4}){5}:)|(?:(?!(?:.*[a-f0-9]:){5,})(?:[a-f0-9]{1,4}(?::[a-f0-9]{1,4}){0,3})?::(?:[a-f0-9]{1,4}(?::[a-f0-9]{1,4}){0,3}:)?)))?(?:(?:25[0-5])|(?:2[0-4][0-9])|(?:1[0-9]{2})|(?:[1-9]?[0-9]))(?:\.(?:(?:25[0-5])|(?:2[0-4][0-9])|(?:1[0-9]{2})|(?:[1-9]?[0-9]))){3}))\]))$/iD';
+
+        $patternEmail='/^(?!(?:(?:\x22?\x5C[\x00-\x7E]\x22?)|(?:\x22?[^\x5C\x22]\x22?)){255,})(?!(?:(?:\x22?\x5C[\x00-\x7E]\x22?)|(?:\x22?[^\x5C\x22]\x22?)){65,}@)(?:(?:[\x21\x23-\x27\x2A\x2B\x2D\x2F-\x39\x3D\x3F\x5E-\x7E]+)|(?:\x22(?:[\x01-\x08\x0B\x0C\x0E-\x1F\x21\x23-\x5B\x5D-\x7F]|(?:\x5C[\x00-\x7F]))*\x22))(?:\.(?:(?:[\x21\x23-\x27\x2A\x2B\x2D\x2F-\x39\x3D\x3F\x5E-\x7E]+)|(?:\x22(?:[\x01-\x08\x0B\x0C\x0E-\x1F\x21\x23-\x5B\x5D-\x7F]|(?:\x5C[\x00-\x7F]))*\x22)))*@(?:(?:(?!.*[^.]{64,})(?:(?:(?:xn--)?[a-z0-9]+(?:-[a-z0-9]+)*\.){1,126}){1,}(?:(?:[a-z][a-z0-9]*)|(?:(?:xn--)[a-z0-9]+))(?:-[a-z0-9]+)*)|(?:\[(?:(?:IPv6:(?:(?:[a-f0-9]{1,4}(?::[a-f0-9]{1,4}){7})|(?:(?!(?:.*[a-f0-9][:\]]){7,})(?:[a-f0-9]{1,4}(?::[a-f0-9]{1,4}){0,5})?::(?:[a-f0-9]{1,4}(?::[a-f0-9]{1,4}){0,5})?)))|(?:(?:IPv6:(?:(?:[a-f0-9]{1,4}(?::[a-f0-9]{1,4}){5}:)|(?:(?!(?:.*[a-f0-9]:){5,})(?:[a-f0-9]{1,4}(?::[a-f0-9]{1,4}){0,3})?::(?:[a-f0-9]{1,4}(?::[a-f0-9]{1,4}){0,3}:)?)))?(?:(?:25[0-5])|(?:2[0-4][0-9])|(?:1[0-9]{2})|(?:[1-9]?[0-9]))(?:\.(?:(?:25[0-5])|(?:2[0-4][0-9])|(?:1[0-9]{2})|(?:[1-9]?[0-9]))){3}))\]))$/iD';
 
        if(!isset($_POST['email']))
        {
