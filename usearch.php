@@ -1,6 +1,9 @@
 <?php
   require('connect.php');
   $searchInput = '';
+  $category_input = '';
+  $categoryname  ='';
+  $catedetail ='';
       if
       (
         isset($_POST['search']) &&
@@ -9,12 +12,43 @@
         strlen($_POST['searchbox'])>=1
       )
       {
+          // $searchInput = filter_input(INPUT_POST, 'searchbox', FILTER_SANITIZE_FULL_SPECIAL_CHARS);
+          // // Query comment
+          // $query = 'SELECT * FROM products WHERE productName LIKE \'%'.$searchInput.'%\''.' OR '.'description LIKE  \'%'.$searchInput.'%\'';
+          // $stmt_product = $db->prepare($query);
+          // // $stmt_product->bindValue(':searchInput',$searchInput);
+          // $stmt_product->execute();
+          // $array_product = $stmt_product->fetchAll();
+
           $searchInput = filter_input(INPUT_POST, 'searchbox', FILTER_SANITIZE_FULL_SPECIAL_CHARS);
-          // Query comment
-          $query = 'SELECT * FROM products WHERE productName LIKE \'%'.$searchInput.'%\''.' OR '.'description LIKE  \'%'.$searchInput.'%\'';
-          $stmt_product = $db->prepare($query);
+
+          $category_input = filter_input(INPUT_POST, 'categoryseach', FILTER_SANITIZE_FULL_SPECIAL_CHARS);
+
+          $query = '';
+          $stmt_product='';
+          $stmt='';
+          if($category_input ==0)
+          {
+                $query = 'SELECT * FROM products WHERE productName LIKE \'%'.$searchInput.'%\''.' OR '.'description LIKE  \'%'.$searchInput.'%\'';
+                $stmt_product = $db->prepare($query);
+                $stmt_product->execute();
+                $categoryname = 'All';
+          }
+          else{
+                $querycate = 'SELECT name FROM category WHERE categoryId = :categoryid';
+                $stmt = $db->prepare($querycate);
+                $stmt->bindValue(':categoryid',$category_input);
+                $stmt->execute();
+                $catedetail = $stmt->fetch();
+                $categoryname = $catedetail['name'];
+
+                $query = 'SELECT * FROM products WHERE categoryId = :categoryid AND  (productName LIKE \'%'.$searchInput.'%\''.' OR '.'description LIKE  \'%'.$searchInput.'%\')';
+                $stmt_product = $db->prepare($query);
+                $stmt_product->bindValue(':categoryid',$category_input);
+                $stmt_product->execute();
+          }
           // $stmt_product->bindValue(':searchInput',$searchInput);
-          $stmt_product->execute();
+
           $array_product = $stmt_product->fetchAll();
       }
 ?>
@@ -45,7 +79,7 @@
     <div class="clear"></div>
     <div id="content">
         <div id="recent">
-            <h2>The search results of keyword: <?= $searchInput ?></h2>
+            <h2>The search results of keyword: <span class="keyword"> <?= $searchInput ?> </span> in category: <span class="keyword"> <?= $categoryname ?> </span></h2>
         </div>
         <?php
         if
