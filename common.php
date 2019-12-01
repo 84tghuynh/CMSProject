@@ -321,6 +321,7 @@
     function insertProduct(&$errorFlagForPic)
     {
         require('connect.php');
+        session_start();
         //  Sanitize user input to escape HTML entities and filter out dangerous characters.
         $productName = filter_input(INPUT_POST, 'productname', FILTER_SANITIZE_FULL_SPECIAL_CHARS);
         $description =  nl2br(htmlspecialchars($_POST['description'], ENT_QUOTES, 'UTF-8'));
@@ -365,7 +366,7 @@
                 $query = "INSERT INTO changehistory(id,productid,name,changetype) values (:id,:productid,:name,:changetype)";
                 $statement = $db->prepare($query);
                     //  Bind values to the parameters
-                $statement->bindValue(':id',1);
+                $statement->bindValue(':id',$_SESSION['id']);
                 $statement->bindValue(':productid',$db->lastInsertId());
                 $statement->bindValue(':name',"Insert");
                 $statement->bindValue(':changetype',1);
@@ -380,7 +381,7 @@
         }
     }
 
-    function insertChangeHistory($id,$productid,$name,$changetype,$flag)
+    function insertChangeHistory($id,$productid,$name,$changetype,&$flag)
     {
         require('connect.php');
          //  Build the parameterized SQL query and bind to the above sanitized values.
@@ -454,7 +455,7 @@
                 $query = "INSERT INTO changehistory(id,productid,name,changetype) values (:id,:productid,:name,:changetype)";
                 $statement = $db->prepare($query);
                     //  Bind values to the parameters
-                $statement->bindValue(':id',1);
+                $statement->bindValue(':id',$_SESSION['id']);
                 $statement->bindValue(':productid',$id);
                 $statement->bindValue(':name',"Update");
                 $statement->bindValue(':changetype',2);
@@ -470,6 +471,66 @@
 
     }
 
+    function deleteProduct($productid)
+    {
+        require('connect.php');
+        session_start();
+        //  Build the parameterized SQL query and bind to the above sanitized values.
+        $query     = "DELETE FROM products WHERE productid = :id";
+        $statement = $db->prepare($query);
+        $statement->bindValue(':id', $productid, PDO::PARAM_INT);
+        //  Execute the DELETE
+        //  execute() will check for possible SQL injection and remove if necessary
+
+        $flag = $statement->execute();
+
+        if($flag)
+        {
+            insertChangeHistory($_SESSION['id'],$productid,'Delete',3,$flag);
+            // $query = "INSERT INTO changehistory(id,productid,name,changetype) values (:id,:productid,:name,:changetype)";
+            // $statement = $db->prepare($query);
+            //     //  Bind values to the parameters
+            // $statement->bindValue(':id',1);
+            // $statement->bindValue(':productid',$id);
+            // $statement->bindValue(':name',"Delete");
+            // $statement->bindValue(':changetype',3);
+            // $flag = $statement->execute();
+        }
+
+        if($flag){
+            header("Location: admin.php");
+            exit();
+        }
+    }
+
+    function deletePicture($productid)
+    {
+        require('connect.php');
+        session_start();
+        //  Build the parameterized SQL query and bind to the above sanitized values.
+        $query     = "UPDATE products SET image=:image WHERE productid = :id";
+        $statement = $db->prepare($query);
+        $statement->bindValue(':id', $productid, PDO::PARAM_INT);
+        $statement->bindValue(':image','');
+        //  Execute the DELETE
+        //  execute() will check for possible SQL injection and remove if necessary
+
+        $flag = $statement->execute();
+
+        if($flag)
+        {
+            insertChangeHistory($_SESSION['id'],$productid,'Update',2,$flag);
+            // $query = "INSERT INTO changehistory(id,productid,name,changetype) values (:id,:productid,:name,:changetype)";
+            // $statement = $db->prepare($query);
+            //     //  Bind values to the parameters
+            // $statement->bindValue(':id',$_SESSION['id']);
+            // $statement->bindValue(':productid',$id);
+            // $statement->bindValue(':name',"Update");
+            // $statement->bindValue(':changetype',2);
+            // $flag = $statement->execute();
+        }
+
+    }
     /**
    *   Does validate an email address
    * 	return  "noemail" : email does not provide
