@@ -503,3 +503,7 @@ a:visited {
 #search {
 	float: left;
 }
+
+.keyword{
+	color: blue;
+}

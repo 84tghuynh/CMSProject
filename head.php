@@ -11,8 +11,8 @@
  ?>
 <form id="search" action="search.php" method="post">
   <div>
-    <select id="category" name="category">
-        <option value="">All</option>
+    <select id="category" name="categoryseach">
+        <option value="0">All</option>
         <?php foreach($category_array as $cate): ?>
           <option value="<?= $cate['categoryId'] ?>"><?= $cate['name']?></option>
         <?php endforeach ?>
