@@ -3,16 +3,16 @@
      $errorFlag = false;
      $authFailure = false;
 
-   
+
             /**
          * Process POST
          */
         if (
-                isset($_POST['login'])                           && 
-                !empty($_POST['password'])                       && 
-                strlen(trim($_POST['password']))!=0              && 
-                strlen($_POST['password'])>=1                    && 
-                (validateEmail() == 'validemail' )               
+                isset($_POST['login'])                           &&
+                !empty($_POST['password'])                       &&
+                strlen(trim($_POST['password']))!=0              &&
+                strlen($_POST['password'])>=1                    &&
+                (validateEmail() == 'validemail' )
             )
             {
                 $email = filter_input(INPUT_POST, 'email', FILTER_SANITIZE_FULL_SPECIAL_CHARS);
@@ -26,7 +26,7 @@
                 }else{
                     $authFailure = true;
                 }
-        
+
             }else{
                 if(isset($_POST['login']) && (empty($_POST['password']) || strlen(trim($_POST['password'])) == 0))   $errorFlag = true;
                 if(isset($_POST['login']) && (validateEmail() != 'validemail' ))  $errorFlag = true;
@@ -47,10 +47,10 @@
             <div><img src="img/ninja.png" alt="Florist"></div>
             <div><a href="#"><h1>CMS For Roy's Florist - Admin Login ! </h1></a></div>
         </div>
-        <div id="header-right">
+        <div class="header-right">
             <div><a href="userregister.php">Register</a></div>
         </div>
-        <div id="header-right">
+        <div class="header-right">
             <div><a href="index.php">Home</a></div>
         </div>
     </div>
@@ -73,18 +73,18 @@
                         <label for="email">Email</label>
                         <?php if($errorFlag): ?>
                             <?php if( validateEmail() == 'invalidemail'): ?>
-                                <input id="email" name="email" type="text" value="<?= trim($_POST['email']) ?>" /> 
+                                <input id="email" name="email" type="text" value="<?= trim($_POST['email']) ?>" />
                                 <p class="registerError error" id="emailformat_error" style="display: block;">* Invalid email address</p>
                             <?php elseif(validateEmail() == 'noemail'): ?>
-                                <input id="email" name="email" type="text" /> 
+                                <input id="email" name="email" type="text" />
                                 <p class="registerError error" id="email_error" style="display: block;">* Required field</p>
                             <?php else: ?>
-                                <input id="email" name="email" type="text" value="<?= trim($_POST['email']) ?>" /> 
+                                <input id="email" name="email" type="text" value="<?= trim($_POST['email']) ?>" />
                                 <p class="registerError error" id="email_error">* Required field</p>
                                 <p class="registerError error" id="emailformat_error">* Invalid email address</p>
                             <?php endif ?>
                         <?php else: ?>
-                            <input id="email" name="email" type="text" /> 
+                            <input id="email" name="email" type="text" />
                             <p class="registerError error" id="email_error">* Required field</p>
                             <p class="registerError error" id="emailformat_error">* Invalid email address</p>
                         <?php endif ?>
@@ -103,7 +103,7 @@
                                 <input id="password" name="password" type="password" />
                                 <p class="registerError error"  id="password_error" >* Required field</p>
                         <?php endif ?>
-                        
+
                     </li>
                 </ul>
                 <div class="clear"></div>

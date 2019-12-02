@@ -56,14 +56,14 @@
             <div><a href="admin.php"><h1>CMS For Roy's Florist </h1></a></div>
         </div>
         <?php if($_SESSION['roletype']==1): ?>
-            <div id="header-right">
+            <div class="header-right">
                 <div><a href="umanage.php">Manage User</a></div>
             </div>
         <?php endif ?>
-        <div id="header-right">
+        <div class="header-right">
             <div><a href="category.php">Category</a></div>
         </div>
-        <div id="header-right">
+        <div class="header-right">
             <div><a href="create.php">New Product</a></div>
         </div>
     </div>
@@ -77,11 +77,10 @@
 
         <?php foreach($array_category as $category): ?>
             <div class="category_name">
-                <?php $categoryid =  $category['categoryid']; ?>
-                <h2><a href="categorydetail.php?id=<?= $categoryid ?>&name=<?= $category['name']?> "><?= $category['name'] ?></a><h2>
+                <h2><a href="categorydetail.php?id=<?= $category['categoryid'] ?>&name=<?= $category['name']?> "><?= $category['name'] ?></a><h2>
             </div>
             <?php foreach($array_product as $product): ?>
-                <?php if($categoryid == $product['categoryid'] ): ?>
+                <?php if($category['categoryid'] == $product['categoryid'] ): ?>
                     <div class="product_title">
                         <h3><a href="show.php?id=<?= $product['productid'] ?>"><?= $product['productname'] ?></a></h3>
                         <div class="edit_link"><a href="edit.php?id=<?= $product['productid'] ?>">edit</a></div>

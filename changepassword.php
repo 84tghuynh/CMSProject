@@ -50,10 +50,10 @@
             <div><img src="img/ninja.png" alt="Florist"></div>
             <div><a href="#"><h1>CMS For Roy's Florist - Admin Change User's Password ! </h1></a></div>
         </div>
-        <div id="header-right">
+        <div class="header-right">
             <div><a href="umanage.php">Manage User</a></div>
         </div>
-        <div id="header-right">
+        <div class="header-right">
             <div><a href="index.php">Home</a></div>
         </div>
     </div>

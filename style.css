@@ -18,11 +18,11 @@ body{
     margin: 10px auto;
 }
 
-#header-right {
+.header-right {
     float: right
 }
 
-#header-right div{
+.header-right div{
     font-size: 1.2em;
     line-height: 2em;
     padding: 5px;

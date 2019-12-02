@@ -49,10 +49,10 @@
             <div><img src="img/ninja.png" alt="Florist"></div>
             <div><a href="admin.php"><h1>CMS For Roy's Florist </h1></a></div>
         </div>
-        <div id="header-right">
+        <div class="header-right">
             <div><a href="useradd.php">Add User</a></div>
         </div>
-        <div id="header-right">
+        <div class="header-right">
             <div><a href="index.php">Home</a></div>
         </div>
     </div>
