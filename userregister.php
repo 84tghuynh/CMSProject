@@ -34,7 +34,7 @@
     <meta charset="utf-8">
     <title>User Register - CMS for Roy's Florist</title>
     <link rel="stylesheet" href="style.css" type="text/css">
-    <script src="js/main.js" type="text/javascript"></script>
+    <script src="js/main.js"></script>
 </head>
 <body>
     <div id="header">

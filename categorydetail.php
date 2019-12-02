@@ -69,7 +69,7 @@
                         Fetch returns FALSE when out of rows, halting the loop. -->
 
             <div class="category_name">
-                <h2><a href="#"><?= $_GET['name'] ?></a><h2>
+                <h2><a href="#"><?= $_GET['name'] ?></a></h2>
             </div>
             <?php foreach($array_product as $product): ?>
                     <div class="product_title">

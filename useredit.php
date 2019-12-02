@@ -100,7 +100,7 @@
     <meta charset="utf-8">
     <title>Admin Edit User - CMS for Roy's Florist</title>
     <link rel="stylesheet" href="style.css" type="text/css">
-    <script src="js/main.js" type="text/javascript"></script>
+    <script src="js/main.js"></script>
 </head>
 <body>
     <?php include("head.php"); ?>
@@ -148,7 +148,7 @@
                             <?php endif ?>
                         <?php else: ?>
                                 <?php if($_GET): ?>
-                                    <input id="lastname" name="lastname" type="text" value="<?=$lastname?>" autofocus />
+                                    <input id="lastname" name="lastname" type="text" value="<?=$lastname?>" />
                                 <?php else: ?>
                                     <input id="lastname" name="lastname" type="text" value="<?= $_POST['lastname'] ?>" />
                                 <?php endif ?>
@@ -189,7 +189,7 @@
                                 <?php endif ?>
                             <?php else: ?>
                                 <?php if($_GET): ?>
-                                    <input id="email" name="email" type="text"  value="<?=$email?>" autofocus />
+                                    <input id="email" name="email" type="text"  value="<?=$email?>"  />
                                 <?php else: ?>
                                     <input id="email" name="email" type="text" value="<?= trim($_POST['email']) ?>"/>
                                 <?php endif ?>

@@ -195,7 +195,7 @@
     <meta charset="utf-8">
     <title>CMS for Roy's Florist - <?= $productname?></title>
     <link rel="stylesheet" href="style.css" type="text/css">
-    <script src="js/main.js" type="text/javascript"></script>
+    <script src="js/main.js" ></script>
 </head>
 <body>
     <?php include("head.php"); ?>
@@ -220,7 +220,7 @@
          <?=htmlspecialchars_decode($description)?>
         </div>
         <div>
-        <h4> Price: $<?= $price ?> </h4>
+          <h4> Price: $<?= $price ?> </h4>
         </div>
             <?php  if($image != ''): ?>
                 <div class='medium'>
@@ -239,9 +239,9 @@
                         <h4>Premium</h4>
                         <img src="<?='uploads/'.$filename.'_premium.'.$ext  ?>" alt="<?= $filename.'_premium.'.$ext ?>" />
                     </div>
-                <div>
+                </div>
             <?php endif ?>
-        </div>
+        <!-- </div> -->
     </div>
     <div class="clear"></div>
     <div class="comment">
@@ -260,7 +260,7 @@
                               <?php endif ?>
                               <div class="clear"></div>
                               <div class="commment_content"><?= $comment['comment'] ?></div>
-                              <h4><?= $comment['name'] ?></a></h4>
+                              <h4><?= $comment['name'] ?></h4>
                               <hr/>
                           </div>
                       <?php else: ?>
@@ -297,12 +297,12 @@
                     <li>
                         <?php  if($errorFlag) :?>
                             <?php if(!empty($_POST['editcomment'])):?>
-                                <p><textarea id="editcomment" name="editcomment"><?= $_POST['editcomment']?></textarea></p>
+                                <p><textarea name="editcomment"><?= $_POST['editcomment']?></textarea></p>
                             <?php elseif(empty($_POST['editcomment'])): ?>
-                                <p><textarea id="editcomment" name="editcomment"></textarea></p>
+                                <p><textarea name="editcomment"></textarea></p>
                             <?php endif ?>
                         <?php else: ?>
-                            <p><textarea id="editcomment" name="editcomment"></textarea></p>
+                            <p><textarea  name="editcomment"></textarea></p>
                         <?php endif ?>
                     </li>
                 </ol>
@@ -322,7 +322,7 @@
                         <input type="text" name="captcha" id="captcha" placeholder="Captcha">
                         <img src="captcha/captcha.php" alt="Image created by a PHP script">
                     </li>
-                    <div class="clear"></div>
+                    <li class="clear"></li>
                     <li>
                         <input type="submit" name="addcomment" id="addcomment" value="Add Comment">
                     </li>

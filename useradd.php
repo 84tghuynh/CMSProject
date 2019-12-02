@@ -41,7 +41,7 @@
     <meta charset="utf-8">
     <title>Admin Add User - CMS for Roy's Florist</title>
     <link rel="stylesheet" href="style.css" type="text/css">
-    <script src="js/main.js" type="text/javascript"></script>
+    <script src="js/main.js" ></script>
 </head>
 <body>
     <?php include("head.php"); ?>
@@ -64,7 +64,7 @@
                 <h2>Add a CMS Roy's Florist account</h2>
                 <p>to continue with Roy's CMS </p>
             </div>
-            <form id="adduser" action="useradd.php"   method="post">
+            <form id="adduserform" action="useradd.php"   method="post">
                 <fieldset id="userInfo">
                 <ul>
                     <li>

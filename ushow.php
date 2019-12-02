@@ -191,7 +191,7 @@
                         <h4>Premium</h4>
                         <img src="<?='uploads/'.$filename.'_premium.'.$ext  ?>" alt="<?= $filename.'_premium.'.$ext ?>" />
                     </div>
-                <div>
+                </div>
             <?php endif ?>
         </div>
     </div>
@@ -205,7 +205,7 @@
                         <small><?=date("M d, Y,  g:i a",strtotime($comment['created'])) ?></small>
                         <div class="clear"></div>
                         <div class="commment_content"><?= $comment['comment'] ?></div>
-                        <h4><?= $comment['name'] ?></a></h4>
+                        <h4><?= $comment['name'] ?></h4>
                         <hr/>
                     </div>
                 <?php endif ?>
@@ -239,12 +239,12 @@
                     <li>
                         <?php  if($errorFlag) :?>
                             <?php if(!empty($_POST['editcomment'])):?>
-                                <p><textarea id="editcomment" name="editcomment"><?= $_POST['editcomment']?></textarea></p>
+                                <p><textarea  name="editcomment"><?= $_POST['editcomment']?></textarea></p>
                             <?php elseif(empty($_POST['editcomment'])): ?>
-                                <p><textarea id="editcomment" name="editcomment"></textarea></p>
+                                <p><textarea  name="editcomment"></textarea></p>
                             <?php endif ?>
                         <?php else: ?>
-                            <p><textarea id="editcomment" name="editcomment"></textarea></p>
+                            <p><textarea  name="editcomment"></textarea></p>
                         <?php endif ?>
                     </li>
                     <li>
@@ -276,7 +276,7 @@
                         <input type="text" name="captcha" id="captcha" placeholder="Captcha">
                         <img src="captcha/captcha.php" alt="Image created by a PHP script">
                     </li>
-                    <div class="clear"></div>
+                    <li class="clear"></li>
                     <li>
                         <input type="submit" name="addcomment" id="addcomment" value="Add Comment">
                     </li>
