@@ -48,6 +48,7 @@
     <meta charset="utf-8">
     <title>CMS for Roy's Florist</title>
     <link rel="stylesheet" href="style.css" type="text/css">
+    <script src="js/main.js" ></script>
 </head>
 <body>
     <?php include("uhead.php"); ?>
@@ -73,20 +74,25 @@
         </div>
          <!-- Fetch each table row in turn. Each $row is a table row hash.
                         Fetch returns FALSE when out of rows, halting the loop. -->
+        <div class="toogleAll" >
+          <strong><span>Show All</span></strong>
+        </div>
         <?php foreach($array_category as $category): ?>
+          <div id="<?= $category['categoryid'] ?>" class="category">
             <div class="category_name">
                 <?php $categoryid =  $category['categoryid']; ?>
-                <h2><a href="ucategorydetail.php?id=<?= $categoryid ?>&name=<?= rawurlencode($category['name']) ?>"><span><?= $category['name']?></span></a></h2>
+                <h2><a href="#"><span><?= $category['name']?></span></a></h2>
             </div>
             <?php foreach($array_product as $product): ?>
                 <?php if($categoryid == $product['categoryid'] ): ?>
-                    <div class="product_title">
+                    <div class="product_title  toogle <?= $category['categoryid'] ?>">
                         <h3><a href="ushow.php?id=<?= $product['productid'] ?>"><?= $product['productname'] ?></a></h3>
                         <div class="clear"></div>
                         <small><?=date("M d, Y,  g:i a",strtotime($product['created'])) ?></small>
                     </div>
                 <?php endif ?>
             <?php endforeach ?>
+          </div>
         <?php endforeach ?>
    </div>
 </body>
