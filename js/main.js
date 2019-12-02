@@ -324,9 +324,14 @@ function load()
 	let login = document.getElementById("login");
 	let updateuser = document.getElementById("updateuser");
 	let changepassword = document.getElementById("changepassword");
-	let toogleAll = document.getElementsByClassName("toogleAll");
 
-	toogleAll[0].addEventListener('click',showAll);
+
+
+	var toogleAll = document.getElementsByClassName("toogleAll");
+	if(toogleAll !=null)
+		for (var i = 0; i < toogleAll.length; i++) {
+		 			toogleAll[i].addEventListener("click",showAll);
+		}
 
 	var x = document.getElementsByClassName("moderate_del");
 	if(x != null)
@@ -336,12 +341,14 @@ function load()
 
 	var category = document.getElementsByClassName("category");
 	if(category != null)
-		for (var i = 0; i < category.length; i++) {
-		  category[i].addEventListener("click",toogletCategory);
+		for (var j = 0; j < category.length; j++) {
+		  category[j].addEventListener("click",toogletCategory);
 		}
 	// Add event listener for the form submit
 	if(submitdelete != null)
+	{
 		submitdelete.addEventListener("click",deleteItem);
+	}
 
 	// Add event listener for the form submit
 	if(deleteuser != null)

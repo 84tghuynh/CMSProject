@@ -209,7 +209,7 @@
     <meta charset="utf-8">
     <title>CMS For Roy's Florist - Editing <?=$productname?></title>
     <link rel="stylesheet" href="style.css" type="text/css">
-    <script src="js/main.js"></script>
+
     <script src="js/tinymce/tinymce.min.js" referrerpolicy="origin"></script>
     <script>tinymce.init({selector:'textarea'});</script>
 </head>
@@ -358,5 +358,6 @@
     <!-- <script src="js/tinymce/tinymce.min.js" referrerpolicy="origin"></script>
     <script>tinymce.init({selector:'textarea'});</script> -->
     <!-- //// -->
+    <script src="js/main.js"></script>
 </body>
 </html>
