@@ -47,6 +47,7 @@
     <meta charset="utf-8">
     <title>CMS for Roy's Florist</title>
     <link rel="stylesheet" href="style.css" type="text/css">
+    <script src="js/main.js" ></script>
 </head>
 <body>
     <?php include("head.php"); ?>
@@ -74,14 +75,17 @@
         </div>
          <!-- Fetch each table row in turn. Each $row is a table row hash.
                         Fetch returns FALSE when out of rows, halting the loop. -->
-
+        <div class="toogleAll" >
+          <strong><span>Show All</span></strong>
+        </div>
         <?php foreach($array_category as $category): ?>
+          <div id="<?= $category['categoryid'] ?>" class="category">
             <div class="category_name">
-                <h2><a href="categorydetail.php?id=<?= $category['categoryid'] ?>&name=<?= rawurlencode($category['name'])?>"><span><?= $category['name'] ?></span></a></h2>
+                <h2><a href="#"><span><?= $category['name'] ?></span></a></h2>
             </div>
             <?php foreach($array_product as $product): ?>
                 <?php if($category['categoryid'] == $product['categoryid'] ): ?>
-                    <div class="product_title">
+                    <div class="product_title toogle <?= $category['categoryid'] ?>">
                         <h3><a href="show.php?id=<?= $product['productid'] ?>"><?= $product['productname'] ?></a></h3>
                         <div class="edit_link"><a href="edit.php?id=<?= $product['productid'] ?>">edit</a></div>
                         <div class="clear"></div>
@@ -89,7 +93,9 @@
                     </div>
                 <?php endif ?>
             <?php endforeach ?>
+          </div>
         <?php endforeach ?>
+
 
    </div>
 </body>

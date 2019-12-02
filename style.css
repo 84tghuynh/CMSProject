@@ -527,3 +527,16 @@ a:visited {
 .keyword{
 	color: blue;
 }
+
+.toogle{
+	display: none;
+}
+
+.toogleAll{
+	margin-bottom: 6px;
+	color: blue;
+}
+
+.toogleAll span:hover{
+	 cursor: pointer;
+}

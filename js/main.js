@@ -292,6 +292,26 @@ function trim(str)
 	return str.replace(/^\s+|\s+$/g,"");
 }
 
+function toogletCategory()
+{
+		let toogle = document.getElementsByClassName("toogle");
+		for(let i=0; i < toogle.length; i++){
+			toogle[i].style.display = "none";
+		}
+		let productTitle = document.getElementsByClassName(this.id);
+		for(let i=0; i < productTitle.length; i++){
+			productTitle[i].style.display = "block";
+		}
+	//alert(this.id);
+}
+
+function showAll()
+{
+		let toogle = document.getElementsByClassName("toogle");
+		for(let i=0; i < toogle.length; i++){
+			toogle[i].style.display = "block";
+		}
+}
 /*
  * Handles the load event of the document.
  */
@@ -304,6 +324,9 @@ function load()
 	let login = document.getElementById("login");
 	let updateuser = document.getElementById("updateuser");
 	let changepassword = document.getElementById("changepassword");
+	let toogleAll = document.getElementsByClassName("toogleAll");
+
+	toogleAll[0].addEventListener('click',showAll);
 
 	var x = document.getElementsByClassName("moderate_del");
 	if(x != null)
@@ -311,6 +334,11 @@ function load()
 		  x[i].addEventListener("click",deleteItem);
 		}
 
+	var category = document.getElementsByClassName("category");
+	if(category != null)
+		for (var i = 0; i < category.length; i++) {
+		  category[i].addEventListener("click",toogletCategory);
+		}
 	// Add event listener for the form submit
 	if(submitdelete != null)
 		submitdelete.addEventListener("click",deleteItem);
@@ -338,7 +366,6 @@ function load()
 	// Add event listener for the form submit
 	// if(changepassword != null)
 	// 	changepassword.addEventListener("click", validateChangePassword);
-
 
 }
 
