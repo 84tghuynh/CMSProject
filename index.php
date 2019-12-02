@@ -76,7 +76,7 @@
         <?php foreach($array_category as $category): ?>
             <div class="category_name">
                 <?php $categoryid =  $category['categoryid']; ?>
-                <h2><a href="ucategorydetail.php?id=<?= $categoryid ?>&name=<?= $category['name']?> "><?= $category['name'] ?></a><h2>
+                <h2><a href="ucategorydetail.php?id=<?= $categoryid ?>&name=<?= rawurlencode($category['name']) ?>"><?= $category['name'] ?></a></h2>
             </div>
             <?php foreach($array_product as $product): ?>
                 <?php if($categoryid == $product['categoryid'] ): ?>
