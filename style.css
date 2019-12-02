@@ -48,6 +48,10 @@ body{
     margin: 30px auto;
 }
 
+.product_title {
+	padding: 5px;
+}
+
 .product_title h2 {
     float: left;
 }
@@ -288,17 +292,33 @@ a:visited {
     font-size: 1em;
 }
 
+.category_name {
+		background: #dedecf;
+    border: 1px solid darkgreen;
+    border-radius: 3px;
+		width: 30%;
+    padding: 5px;
+}
+
 .category_name h2 {
     margin: 1px 0;
 }
 
+
 .category_name h2 a {
     text-decoration: none;
-    color: #0f0f0f;
+    color: #4a25bb;
+		width:100%;
+}
+
+.category_name span{
+	display: inline-block;
+	color: #4a25bb;
+	width: 100%;
 }
 
 .category_name a:visited {
-    color: #0f0f0f;
+    color: #4a25bb;
 }
 
 /** REGISTER */
