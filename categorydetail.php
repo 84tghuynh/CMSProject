@@ -74,6 +74,7 @@
             <?php foreach($array_product as $product): ?>
                     <div class="product_title">
                         <h3><a href="show.php?id=<?= $product['productid'] ?>"><?= $product['productname'] ?></a></h3>
+                        <div class="edit_link"><a href="edit.php?id=<?= $product['productid'] ?>">edit</a></div>
                         <div class="clear"></div>
                         <small><?=date("M d, Y,  g:i a",strtotime($product['created'])) ?></small>
                     </div>
