@@ -40,3 +40,4 @@ Florist site.
 
 V. Timeline
 The software will be completed and delivered in 6 weeks from the contract date.
+-
