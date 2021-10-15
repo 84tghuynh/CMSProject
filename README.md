@@ -21,7 +21,7 @@ will help you proactively change any content on your website at any time.
 
 The system will include functions as below:
 
-+ Create a new product
++ Create a new product.
 + Edit the existing product such as description, adding/deleting pictures, product name, price, size of the
 product
 + Delete the product
